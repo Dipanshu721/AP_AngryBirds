@@ -8,4 +8,5 @@ public class kingPiggy extends Piggy {
         Face = new Texture("kingpiggy.png");
     }
 
+
 }
