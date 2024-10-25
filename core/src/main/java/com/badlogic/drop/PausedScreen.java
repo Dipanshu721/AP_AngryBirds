@@ -34,7 +34,7 @@ public class PausedScreen implements Screen {
         ExitGameTexture = new Texture(Gdx.files.internal("exitgamebutton.png"));
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(9, 5, camera);
+        viewport = new FitViewport(920, 565, camera);
 
         ResumeSprite = new Sprite(ResumeTexture);
         ExitGameSprite = new Sprite(ExitGameTexture);

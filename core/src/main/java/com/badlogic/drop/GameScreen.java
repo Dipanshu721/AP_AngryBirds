@@ -1,6 +1,7 @@
     package com.badlogic.drop;
 
     import com.badlogic.gdx.Gdx;
+    import com.badlogic.gdx.Input;
     import com.badlogic.gdx.Screen;
     import com.badlogic.gdx.graphics.Color;
     import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -38,7 +39,6 @@
         private Sprite RetrySprite;
         private Circle RetryCircle;
 
-
         private OrthographicCamera camera;
         private Viewport viewport;
 
@@ -71,18 +71,19 @@
             RetryTexture = new Texture(Gdx.files.internal("retry.png"));
 
             camera = new OrthographicCamera();
-            viewport = new FitViewport(9, 5, camera);
+            viewport = new FitViewport(2560, 1440, camera);
 
             pauseSprite = new Sprite(pauseTexture);
             SlingshotSprite = new Sprite(slingshotTexture);
             RetrySprite =  new Sprite(RetryTexture);
 
-            pauseSprite.setSize(.8f, .8f);
-            SlingshotSprite.setSize(.7f, .7f);
-            RetrySprite.setSize(.8f,.8f);
-            RetrySprite.setPosition(1,4.2f);
-            pauseSprite.setPosition(0, 4.2f);
-            SlingshotSprite.setPosition(1.2f, 0.6f);
+            pauseSprite.setSize(200, 200);
+            SlingshotSprite.setSize(300, 300);
+            RetrySprite.setSize(200,200);
+            RetrySprite.setPosition(200,124
+                0);
+            pauseSprite.setPosition(0, 1390);
+            SlingshotSprite.setPosition(500, 500);
 
             redbirdSprite.setPosition(1.1f, 0.7f);
             redbirdSprite.setSize(0.3f, 0.3f);
@@ -155,6 +156,9 @@
                 if (RetryCircle.contains(touchPos.x, touchPos.y)) {
                     game.setScreen(new GameScreen(game));
                 }
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                game.setScreen(new WinScreen(game));
             }
         }
 

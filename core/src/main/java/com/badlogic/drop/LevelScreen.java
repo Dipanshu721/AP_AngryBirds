@@ -36,19 +36,19 @@ public class LevelScreen implements Screen {
         play3Texture = new Texture(Gdx.files.internal("3.png"));
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(9, 5, camera);
+        viewport = new FitViewport(920, 565, camera);
 
         play1Sprite = new Sprite(play1Texture);
         play2Sprite = new Sprite(play2Texture);
         play3Sprite = new Sprite(play3Texture);
 
-        play1Sprite.setSize(1, 1);
-        play2Sprite.setSize(1, 1);
-        play3Sprite.setSize(1, 1);
+        play1Sprite.setSize(70, 70);
+        play2Sprite.setSize(70, 70);
+        play3Sprite.setSize(70, 70);
 
-        play1Sprite.setPosition(1, 3);
-        play2Sprite.setPosition(4, 3);
-        play3Sprite.setPosition(7, 3);
+        play1Sprite.setPosition(200, 390);
+        play2Sprite.setPosition(430, 390);
+        play3Sprite.setPosition(680, 390);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class LevelScreen implements Screen {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 1 && touchPos.x <= 2 && touchPos.y >= 3 && touchPos.y <= 4) {// enter level 1 game
+            if (touchPos.x >= 200 && touchPos.x <= 270 && touchPos.y >= 390 && touchPos.y <= 460) {// enter level 1 game
                 game.setScreen(new GameScreen(game));
             }
         }

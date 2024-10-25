@@ -25,7 +25,7 @@ public class HomeScreen implements Screen {
         backgroundTexture = new Texture("HomeScreen.jpg");
         PlayButton = new Texture("PlayButton.png");
         touchPos= new Vector2();
-        viewport = new FitViewport(8, 5);
+        viewport = new FitViewport(256, 143);
     }
 
     @Override
@@ -38,14 +38,14 @@ public class HomeScreen implements Screen {
         float worldWidth = viewport.getWorldWidth();    // can directly implement as argument.
         float worldHeight = viewport.getWorldHeight();
         game.getbatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-        game.getbatch().draw(PlayButton, 5,1,2,2);
+        game.getbatch().draw(PlayButton, 160,50,50,40);
         game.getbatch().end();
 
         if (Gdx.input.isTouched()){
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 5 && touchPos.x <= 7 && touchPos.y >= 1 && touchPos.y <= 3) {
+            if (touchPos.x >= 160 && touchPos.x <= 210 && touchPos.y >= 50 && touchPos.y <= 90) {
                 game.setScreen(new LevelScreen(game));
             }
         }
