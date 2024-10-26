@@ -30,7 +30,7 @@ public class LostScreen implements Screen {
         GoToHomeTexture = new Texture(Gdx.files.internal("gotohome.png"));
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(920, 565, camera);
+        viewport = new FitViewport(2048, 1152, camera);
 
         GoToHomeSprite = new Sprite(GoToHomeTexture);
         GoToHomeSprite.setSize(2.5f, 1);

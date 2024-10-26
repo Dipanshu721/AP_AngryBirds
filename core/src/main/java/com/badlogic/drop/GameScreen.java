@@ -80,8 +80,7 @@
             pauseSprite.setSize(200, 200);
             SlingshotSprite.setSize(300, 300);
             RetrySprite.setSize(200,200);
-            RetrySprite.setPosition(200,124
-                0);
+            RetrySprite.setPosition(200,1240);
             pauseSprite.setPosition(0, 1390);
             SlingshotSprite.setPosition(500, 500);
 
@@ -104,7 +103,7 @@
 
             float radius = pauseSprite.getWidth()/2;
             pauseCircle = new Circle(pauseSprite.getX() + radius,pauseSprite.getY()+radius, radius);
-            RetryCircle = new Circle(RetrySprite.getX() + radius, RetrySprite.getY() + radius, radius);
+            RetryCircle = new Circle(RetrySprite.getX() + radius, RetrySprite.getY()+radius, radius);
         }
 
         @Override

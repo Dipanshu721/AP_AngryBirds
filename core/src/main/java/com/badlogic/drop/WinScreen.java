@@ -32,7 +32,7 @@ public class WinScreen implements Screen {
 
         spriteBatch = new SpriteBatch();
         camera = new OrthographicCamera();
-        viewport = new FitViewport(920, 565, camera);
+        viewport = new FitViewport(2048, 1152, camera);
 
         GoToHomeSprite = new Sprite(GoToHomeTexture);
 

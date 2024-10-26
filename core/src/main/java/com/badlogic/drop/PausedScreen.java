@@ -29,12 +29,12 @@ public class PausedScreen implements Screen {
 
     @Override
     public void show() {
-        backgroundTexture = new Texture(Gdx.files.internal("paused.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("pauseScreen.png"));
         ResumeTexture = new Texture(Gdx.files.internal("resumebutton.png"));
         ExitGameTexture = new Texture(Gdx.files.internal("exitgamebutton.png"));
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(920, 565, camera);
+        viewport = new FitViewport(2048, 1152, camera);
 
         ResumeSprite = new Sprite(ResumeTexture);
         ExitGameSprite = new Sprite(ExitGameTexture);

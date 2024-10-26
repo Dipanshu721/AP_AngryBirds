@@ -36,19 +36,19 @@ public class LevelScreen implements Screen {
         play3Texture = new Texture(Gdx.files.internal("3.png"));
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(920, 565, camera);
+        viewport = new FitViewport(1946, 1094, camera);
 
         play1Sprite = new Sprite(play1Texture);
         play2Sprite = new Sprite(play2Texture);
         play3Sprite = new Sprite(play3Texture);
 
-        play1Sprite.setSize(70, 70);
-        play2Sprite.setSize(70, 70);
-        play3Sprite.setSize(70, 70);
+        play1Sprite.setSize(150, 150);
+        play2Sprite.setSize(150, 150);
+        play3Sprite.setSize(150, 150);
 
-        play1Sprite.setPosition(200, 390);
-        play2Sprite.setPosition(430, 390);
-        play3Sprite.setPosition(680, 390);
+        play1Sprite.setPosition(480, 600);
+        play2Sprite.setPosition(960, 600);
+        play3Sprite.setPosition(1420, 600);
     }
 
     @Override
@@ -59,26 +59,22 @@ public class LevelScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
-
         viewport.apply();
         game.getbatch().setProjectionMatrix(camera.combined);
 
         game.getbatch().begin();
-
         game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         play1Sprite.draw(game.getbatch());
         play2Sprite.draw(game.getbatch());
         play3Sprite.draw(game.getbatch());
-
         game.getbatch().end();
 
         if (Gdx.input.isTouched()){
             Vector2 touchPos = new Vector2();
-
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 200 && touchPos.x <= 270 && touchPos.y >= 390 && touchPos.y <= 460) {// enter level 1 game
+            if (touchPos.x >= 480 && touchPos.x <= 630 && touchPos.y >= 600 && touchPos.y <= 750) {// enter level 1 game
                 game.setScreen(new GameScreen(game));
             }
         }
