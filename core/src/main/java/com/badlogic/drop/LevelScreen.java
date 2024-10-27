@@ -30,7 +30,7 @@ public class LevelScreen implements Screen {
 
     @Override
     public void show() {
-        backgroundTexture = new Texture(Gdx.files.internal("LEVELS.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("levelscreen.png"));
         play1Texture = new Texture(Gdx.files.internal("1.png"));
         play2Texture = new Texture(Gdx.files.internal("2.png"));
         play3Texture = new Texture(Gdx.files.internal("3.png"));
@@ -42,9 +42,9 @@ public class LevelScreen implements Screen {
         play2Sprite = new Sprite(play2Texture);
         play3Sprite = new Sprite(play3Texture);
 
-        play1Sprite.setSize(150, 150);
-        play2Sprite.setSize(150, 150);
-        play3Sprite.setSize(150, 150);
+        play1Sprite.setSize(450, 250);
+        play2Sprite.setSize(450, 250);
+        play3Sprite.setSize(450, 250);
 
         play1Sprite.setPosition(480, 600);
         play2Sprite.setPosition(960, 600);
