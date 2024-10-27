@@ -33,8 +33,8 @@ public class LostScreen implements Screen {
         viewport = new FitViewport(2048, 1152, camera);
 
         GoToHomeSprite = new Sprite(GoToHomeTexture);
-        GoToHomeSprite.setSize(2.5f, 1);
-        GoToHomeSprite.setPosition(3.2f, 2.5f);
+        GoToHomeSprite.setSize(512, 144);
+        GoToHomeSprite.setPosition(750, 550);
     }
 
     @Override
@@ -59,8 +59,8 @@ public class LostScreen implements Screen {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 3.2f && touchPos.x <= 5.7f && touchPos.y >= 2.5f && touchPos.y <= 3.5f) {// go to level screen
-                game.setScreen(new LevelScreen(game));
+            if (touchPos.x >= 750 && touchPos.x <= 1262 && touchPos.y >= 550 && touchPos.y <= 694) {// go to level screen
+                game.setScreen(new HomeScreen(game));
             }
         }
     }

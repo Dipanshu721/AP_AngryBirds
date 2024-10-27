@@ -13,6 +13,7 @@ public class HomeScreen implements Screen {
     private final Main game;
     Texture backgroundTexture;
     Texture PlayButton;
+    Texture ExitButton;
     FitViewport viewport;
     Vector2 touchPos;
 
@@ -22,31 +23,42 @@ public class HomeScreen implements Screen {
 
     @Override
     public void show() {
-        backgroundTexture = new Texture("HomeScreen.jpg");
+        backgroundTexture = new Texture("firstscreen.png");
         PlayButton = new Texture("PlayButton.png");
+        ExitButton = new Texture("ExitButton.png");
         touchPos= new Vector2();
-        viewport = new FitViewport(1920, 1080);
+        viewport = new FitViewport(1280, 715);
     }
 
     @Override
     public void render(float delta) {
-        game.getbatch().begin();
+
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         game.getbatch().setProjectionMatrix(viewport.getCamera().combined);
-
+        game.getbatch().begin();
         float worldWidth = viewport.getWorldWidth();    // can directly implement as argument.
         float worldHeight = viewport.getWorldHeight();
         game.getbatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-        game.getbatch().draw(PlayButton, 800,80,300,250);
+        game.getbatch().draw(PlayButton, 850,220,243.25f,136.75f);
+        game.getbatch().draw(ExitButton,850, 70, 243.25f, 136.75f);
         game.getbatch().end();
 
-        if (Gdx.input.isTouched()){
+        if (Gdx.input.isTouched()){ // startgame
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 800 && touchPos.x <= 1100 && touchPos.y >= 80 && touchPos.y <= 330) {
+            if (touchPos.x >= 850 && touchPos.x <= 1093.25f && touchPos.y >= 220 && touchPos.y <= 356.75f) {
                 game.setScreen(new LevelScreen(game));
+            }
+        }
+
+        if (Gdx.input.isTouched()){ // exitgame
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
+            viewport.unproject(touchPos);
+
+            if (touchPos.x >= 850 && touchPos.x <= 1093.25f && touchPos.y >= 70 && touchPos.y <= 206.75f) {
+                Gdx.app.exit();
             }
         }
     }

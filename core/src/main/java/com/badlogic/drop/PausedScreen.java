@@ -39,11 +39,11 @@ public class PausedScreen implements Screen {
         ResumeSprite = new Sprite(ResumeTexture);
         ExitGameSprite = new Sprite(ExitGameTexture);
 
-        ResumeSprite.setSize(2, 1);
-        ExitGameSprite.setSize(2, 1);
+        ResumeSprite.setSize(512, 144);
+        ExitGameSprite.setSize(512, 144);
 
-        ResumeSprite.setPosition(2, 3);
-        ExitGameSprite.setPosition(5, 3);
+        ResumeSprite.setPosition(400, 650);
+        ExitGameSprite.setPosition(1050, 650);
     }
 
     @Override
@@ -53,16 +53,14 @@ public class PausedScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         game.getbatch().begin();
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         game.getbatch().setProjectionMatrix(camera.combined);
-
-
         game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         ResumeSprite.draw(game.getbatch());
         ExitGameSprite.draw(game.getbatch());
-
         game.getbatch().end();
 
         if (Gdx.input.isTouched()){             // touch for resume
@@ -70,7 +68,7 @@ public class PausedScreen implements Screen {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 2 && touchPos.x <= 4 && touchPos.y >= 3 && touchPos.y <= 4) {
+            if (touchPos.x >= 400 && touchPos.x <= 912 && touchPos.y >=650 && touchPos.y <= 794) {
                 game.setScreen(new GameScreen(game));
             }
         }
@@ -80,7 +78,7 @@ public class PausedScreen implements Screen {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 5 && touchPos.x <= 7 && touchPos.y >= 3 && touchPos.y <= 4) {
+            if (touchPos.x >= 1050 && touchPos.x <= 1652 && touchPos.y >= 650 && touchPos.y <= 794) {
                 game.setScreen(new LostScreen(game));
             }
         }

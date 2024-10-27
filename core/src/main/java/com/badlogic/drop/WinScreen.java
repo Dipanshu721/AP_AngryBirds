@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -35,10 +36,8 @@ public class WinScreen implements Screen {
         viewport = new FitViewport(2048, 1152, camera);
 
         GoToHomeSprite = new Sprite(GoToHomeTexture);
-
-        GoToHomeSprite.setSize(3, 1);
-
-        GoToHomeSprite.setPosition(3.5f, 2.5f);
+        GoToHomeSprite.setSize(512, 144);
+        GoToHomeSprite.setPosition(780, 650);
     }
 
     @Override
@@ -54,11 +53,19 @@ public class WinScreen implements Screen {
         spriteBatch.setProjectionMatrix(camera.combined);
 
         spriteBatch.begin();
-
         spriteBatch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-
         GoToHomeSprite.draw(spriteBatch);
         spriteBatch.end();
+
+        if (Gdx.input.isTouched()){
+            Vector2 touchPos = new Vector2();
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
+            viewport.unproject(touchPos);
+
+            if (touchPos.x >= 780 && touchPos.x <= 1292 && touchPos.y >= 650 && touchPos.y <= 794) {// enter level 1 game
+                game.setScreen(new HomeScreen(game));
+            }
+        }
     }
 
     @Override
