@@ -46,9 +46,9 @@ public class LevelScreen implements Screen {
         play2Sprite.setSize(450, 250);
         play3Sprite.setSize(450, 250);
 
-        play1Sprite.setPosition(480, 600);
-        play2Sprite.setPosition(960, 600);
-        play3Sprite.setPosition(1420, 600);
+        play1Sprite.setPosition(213, 550);
+        play2Sprite.setPosition(751, 550);
+        play3Sprite.setPosition(1283, 550);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class LevelScreen implements Screen {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 480 && touchPos.x <= 630 && touchPos.y >= 600 && touchPos.y <= 750) {// enter level 1 game
+            if (touchPos.x >= 213 && touchPos.x <= 663 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
                 game.setScreen(new StartScreen(game));
             }
         }

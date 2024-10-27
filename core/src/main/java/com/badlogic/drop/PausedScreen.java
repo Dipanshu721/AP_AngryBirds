@@ -29,21 +29,21 @@ public class PausedScreen implements Screen {
 
     @Override
     public void show() {
-        backgroundTexture = new Texture(Gdx.files.internal("pauseScreen.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("pausedscreen.png"));
         ResumeTexture = new Texture(Gdx.files.internal("resumebutton.png"));
         ExitGameTexture = new Texture(Gdx.files.internal("exitgamebutton.png"));
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(2048, 1152, camera);
+        viewport = new FitViewport(1946, 1094, camera);
 
         ResumeSprite = new Sprite(ResumeTexture);
         ExitGameSprite = new Sprite(ExitGameTexture);
 
-        ResumeSprite.setSize(512, 144);
-        ExitGameSprite.setSize(512, 144);
+        ResumeSprite.setSize(600, 300);
+        ExitGameSprite.setSize(600, 300);
 
-        ResumeSprite.setPosition(400, 650);
-        ExitGameSprite.setPosition(1050, 650);
+        ResumeSprite.setPosition(250, 525);
+        ExitGameSprite.setPosition(1050, 525);
     }
 
     @Override
@@ -63,22 +63,22 @@ public class PausedScreen implements Screen {
         ExitGameSprite.draw(game.getbatch());
         game.getbatch().end();
 
-        if (Gdx.input.isTouched()){             // touch for resume
+        if (Gdx.input.isTouched()){
             Vector2 touchPos = new Vector2();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 400 && touchPos.x <= 912 && touchPos.y >=650 && touchPos.y <= 794) {
+            if (touchPos.x >= 250 && touchPos.x <= 850 && touchPos.y >=525 && touchPos.y <= 825) {
                 game.setScreen(new GameScreen(game));
             }
         }
 
-        if (Gdx.input.isTouched()){             // touch to exit
+        if (Gdx.input.isTouched()){
             Vector2 touchPos = new Vector2();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 1050 && touchPos.x <= 1652 && touchPos.y >= 650 && touchPos.y <= 794) {
+            if (touchPos.x >= 1050 && touchPos.x <= 1650 && touchPos.y >= 525 && touchPos.y <= 825) {
                 game.setScreen(new LostScreen(game));
             }
         }

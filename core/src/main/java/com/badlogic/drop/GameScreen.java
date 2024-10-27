@@ -38,6 +38,9 @@ public class GameScreen implements Screen {
     private Texture RetryTexture;
     private Sprite RetrySprite;
     private Circle RetryCircle;
+    private Texture SaveTexture;
+    private Sprite SaveSprite;
+    private Circle SaveCircle;
 
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -69,6 +72,7 @@ public class GameScreen implements Screen {
         pauseTexture = new Texture(Gdx.files.internal("pausebutton.png"));
         Texture slingshotTexture = new Texture(Gdx.files.internal("Slingshot.png"));
         RetryTexture = new Texture(Gdx.files.internal("retry.png"));
+        SaveTexture = new Texture(Gdx.files.internal("save.png"));
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(2560, 1440, camera);
@@ -76,11 +80,15 @@ public class GameScreen implements Screen {
         pauseSprite = new Sprite(pauseTexture);
         SlingshotSprite = new Sprite(slingshotTexture);
         RetrySprite =  new Sprite(RetryTexture);
+        SaveSprite =  new Sprite(SaveTexture);
 
         pauseSprite.setSize(160, 160);
         SlingshotSprite.setSize(200, 200);
         RetrySprite.setSize(160,160);
+        SaveSprite.setSize(247,143);
+
         RetrySprite.setPosition(180,1250);
+        SaveSprite.setPosition(340,1255);
         pauseSprite.setPosition(0, 1250);
         SlingshotSprite.setPosition(410, 160);
 
@@ -104,6 +112,7 @@ public class GameScreen implements Screen {
         float radius = pauseSprite.getWidth()/2;
         pauseCircle = new Circle(pauseSprite.getX() + radius,pauseSprite.getY()+radius, radius);
         RetryCircle = new Circle(RetrySprite.getX() + radius, RetrySprite.getY()+radius, radius);
+        SaveCircle = new Circle(SaveSprite.getX() + radius, SaveSprite.getY()+radius, radius);
     }
 
     @Override
@@ -126,6 +135,7 @@ public class GameScreen implements Screen {
         pauseSprite.draw(game.getbatch());
         SlingshotSprite.draw(game.getbatch());
         RetrySprite.draw(game.getbatch());
+        SaveSprite.draw(game.getbatch());
 
         redbirdSprite.draw(game.getbatch());
         blackbirdSprite.draw(game.getbatch());
@@ -153,6 +163,10 @@ public class GameScreen implements Screen {
             viewport.unproject(touchPos);
 
             if (RetryCircle.contains(touchPos.x, touchPos.y)) {
+                game.setScreen(new GameScreen(game));
+            }
+
+            if (SaveCircle.contains(touchPos.x, touchPos.y)) {
                 game.setScreen(new GameScreen(game));
             }
         }

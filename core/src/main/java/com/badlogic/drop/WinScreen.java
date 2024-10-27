@@ -33,11 +33,11 @@ public class WinScreen implements Screen {
 
         spriteBatch = new SpriteBatch();
         camera = new OrthographicCamera();
-        viewport = new FitViewport(2048, 1152, camera);
+        viewport = new FitViewport(1946, 1094, camera);
 
         GoToHomeSprite = new Sprite(GoToHomeTexture);
-        GoToHomeSprite.setSize(512, 144);
-        GoToHomeSprite.setPosition(780, 650);
+        GoToHomeSprite.setSize(570, 330);
+        GoToHomeSprite.setPosition(700, 500);
     }
 
     @Override

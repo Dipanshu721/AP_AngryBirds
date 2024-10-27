@@ -24,11 +24,11 @@ public class StartScreen implements Screen {
 
     @Override
     public void show() {
-        backgroundTexture = new Texture(Gdx.files.internal("gamescreen.jpg"));
-        newGame = new Texture(Gdx.files.internal("PlayButton.png"));
-        savedGame = new Texture(Gdx.files.internal("PlayButton.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("startscreen.png"));
+        newGame = new Texture(Gdx.files.internal("newgame.png"));
+        savedGame = new Texture(Gdx.files.internal("savedgame.png"));
         touchPos= new Vector2();
-        viewport = new FitViewport(2560, 1440);
+        viewport = new FitViewport(1946, 1094);
     }
 
     @Override
@@ -38,29 +38,29 @@ public class StartScreen implements Screen {
         viewport.apply();
         game.getbatch().setProjectionMatrix(viewport.getCamera().combined);
         game.getbatch().begin();
-        float worldWidth = viewport.getWorldWidth();    // can directly implement as argument.
+        float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
         game.getbatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-        game.getbatch().draw(newGame, 1000,850,450,200);
-        game.getbatch().draw(savedGame,1000, 400, 450, 200);
+        game.getbatch().draw(newGame, 250,550,600,300);
+        game.getbatch().draw(savedGame,1050, 550, 600, 300);
         game.getbatch().end();
 
         if (Gdx.input.isTouched()){ // newgame
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 1000 && touchPos.x <= 1450 && touchPos.y >= 850 && touchPos.y <= 1050) {
+            if (touchPos.x >= 250 && touchPos.x <= 850 && touchPos.y >= 550 && touchPos.y <= 850) {
                 game.setScreen(new GameScreen(game));
             }
         }
-//        if (Gdx.input.isTouched()){ // savedgame
-//            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-//            viewport.unproject(touchPos);
-//
-//            if (touchPos.x >= 1000 && touchPos.x <= 1450 && touchPos.y >= 400 && touchPos.y <= 650) {
-//            // nothing as of now
-//            }
-//        }
+       if (Gdx.input.isTouched()){ // savedgame
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
+            viewport.unproject(touchPos);
+
+            if (touchPos.x >= 1050 && touchPos.x <= 1650 && touchPos.y >= 550 && touchPos.y <=  850) {
+                game.setScreen(new GameScreen(game));
+            }
+        }
 
     }
 
