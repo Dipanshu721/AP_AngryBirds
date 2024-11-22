@@ -165,10 +165,9 @@ public class GameScreen implements Screen {
             game.setScreen(new SampleBallScreen(game));
         }
 
-
         world.step(1/60f, 6,2); // stepping which updates world objects through time
         // what is does here is update bird trajectory, sr. movement, object falling. TO SAY updating physics each frame
-        //velocity and position iterations define qualty of simulation
+        //velocity and position iterations define quality of simulation
         debugRenderer.render(world, camera.combined); // to render physics bodies
 
     }
