@@ -45,7 +45,7 @@ public class StartScreen implements Screen {
         game.getbatch().draw(savedGame,1050, 550, 600, 300);
         game.getbatch().end();
 
-        if (Gdx.input.isTouched()){ // newgame
+        if (Gdx.input.justTouched()){ // newgame
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
@@ -53,7 +53,7 @@ public class StartScreen implements Screen {
                 game.setScreen(new GameScreen(game));
             }
         }
-       if (Gdx.input.isTouched()){ // savedgame
+       if (Gdx.input.justTouched()){ // savedgame
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 

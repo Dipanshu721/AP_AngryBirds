@@ -1,4 +1,5 @@
 package com.badlogic.drop;
+import com.badlogic.gdx.physics.box2d.Box2D;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -7,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Main extends Game {
     private SpriteBatch batch;
-
     public SpriteBatch getbatch(){
         return this.batch;
     }
@@ -16,6 +16,7 @@ public class Main extends Game {
     public void create() {
         batch = new SpriteBatch();
         setScreen(new HomeScreen(this));
+        Box2D.init();
     }
 
     @Override

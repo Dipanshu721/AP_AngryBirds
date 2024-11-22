@@ -6,114 +6,96 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
     private final Main game;
+    // Core Textures
     private Texture backgroundTexture;
     private Texture pauseTexture;
-    private Sprite pauseSprite;
-    private Sprite SlingshotSprite;
-    private final Vector2 touchPos = new Vector2();
-    private Circle pauseCircle;
+    private Texture RetryTexture;
+    private Texture SaveTexture;
+
     private redbird redBird;
     private blackbird blackBird;
     private yellowbird yellowBird;
-    private Sprite redbirdSprite;
-    private Sprite blackbirdSprite;
-    private Sprite yellowbirdSprite;
+
     private kingPiggy kingPiggy;
-    private Sprite kingPigSprite;
     private WoodStructure woodStructure;
     private SteelStructure steelStructure;
-    private IceStructure iceStructure;
-    private Sprite iceSprite;
-    private Sprite steelSprite;
-    private Sprite woodSprite;
-    private Texture RetryTexture;
-    private Sprite RetrySprite;
+    private  IceStructure iceStructure;
+
+    // Utility Objects
+    private final Vector2 touchPos = new Vector2();
+    private Circle pauseCircle;
     private Circle RetryCircle;
-    private Texture SaveTexture;
-    private Sprite SaveSprite;
     private Circle SaveCircle;
 
+    // Camera and Viewport
     private OrthographicCamera camera;
     private Viewport viewport;
 
+    private World world; // World is physics simulation environment it holds physics bodies, simulation/movement and interaction in BOX2D
+    private Box2DDebugRenderer debugRenderer;
+    private float accumulator = 0;
+
+    // Define constants for physics updates
+    public static class Constants {
+        public static final float TIME_STEP = 1 / 60f; // Fixed time step (60 frames/second)
+        public static final int VELOCITY_ITERATIONS = 6; // Velocity solver iterations
+        public static final int POSITION_ITERATIONS = 2; // Position solver iterations
+    }
+    private void doPhysicsStep(float deltaTime) { // this fn controls physics simulation updates with fixed timestep
+        float frameTime = Math.min(deltaTime, 0.25f); // Avoid large frame jumps
+        accumulator += frameTime;
+
+        while (accumulator >= Constants.TIME_STEP) {
+            world.step(Constants.TIME_STEP, Constants.VELOCITY_ITERATIONS, Constants.POSITION_ITERATIONS);
+            accumulator -= Constants.TIME_STEP;
+        }
+    }
     public GameScreen(Main game) {
         this.game = game;
+        world = new World(new Vector2(0, -10), true);
+        debugRenderer = new Box2DDebugRenderer();
         create();
     }
 
-    public void create(){
-        redBird = new redbird();
-        redbirdSprite = new Sprite(redBird.getFace());
-        blackBird = new blackbird();
-        blackbirdSprite = new Sprite(blackBird.getFace());
-        yellowBird = new yellowbird();
-        yellowbirdSprite = new Sprite(yellowBird.getFace());
-
-        kingPiggy = new kingPiggy();
-        kingPigSprite = new Sprite(kingPiggy.getFace());
-
-        woodStructure = new WoodStructure();
-        steelStructure = new SteelStructure();
-        iceStructure = new IceStructure();
-        woodSprite = new Sprite(woodStructure.getFace());
-        steelSprite = new Sprite(steelStructure.getFace());
-        iceSprite = new Sprite(iceStructure.getFace());
-
+    public void create() {
+        // Textures
         backgroundTexture = new Texture(Gdx.files.internal("gamescreen.jpg"));
         pauseTexture = new Texture(Gdx.files.internal("pausebutton.png"));
         Texture slingshotTexture = new Texture(Gdx.files.internal("Slingshot.png"));
         RetryTexture = new Texture(Gdx.files.internal("retry.png"));
         SaveTexture = new Texture(Gdx.files.internal("save.png"));
 
+        // Birds;
+        redBird = new redbird();
+        blackBird = new blackbird();
+        yellowBird = new yellowbird();
+
+        // Pigs and Structures
+        kingPiggy = new kingPiggy();
+        woodStructure = new WoodStructure();
+        steelStructure = new SteelStructure();
+        iceStructure = new IceStructure();
+
+        // Camera and Viewport
         camera = new OrthographicCamera();
         viewport = new FitViewport(2560, 1440, camera);
 
-        pauseSprite = new Sprite(pauseTexture);
-        SlingshotSprite = new Sprite(slingshotTexture);
-        RetrySprite =  new Sprite(RetryTexture);
-        SaveSprite =  new Sprite(SaveTexture);
-
-        pauseSprite.setSize(160, 160);
-        SlingshotSprite.setSize(200, 200);
-        RetrySprite.setSize(160,160);
-        SaveSprite.setSize(247,143);
-
-        RetrySprite.setPosition(180,1250);
-        SaveSprite.setPosition(340,1255);
-        pauseSprite.setPosition(0, 1250);
-        SlingshotSprite.setPosition(410, 160);
-
-        redbirdSprite.setPosition(100, 180);
-        redbirdSprite.setSize(100, 100);
-        blackbirdSprite.setPosition(200,195);
-        blackbirdSprite.setSize(90,90);
-        yellowbirdSprite.setPosition(300,195);
-        yellowbirdSprite.setSize(80,80);
-
-        kingPigSprite.setPosition(2100,290);
-        kingPigSprite.setSize(100, 100);
-
-        woodSprite.setSize(100,100);
-        woodSprite.setPosition(2000,190);
-        steelSprite.setSize(100,100);
-        steelSprite.setPosition(2100,190);
-        iceSprite.setSize(100,100);
-        iceSprite.setPosition(2200,190);
-
-        float radius = pauseSprite.getWidth()/2;
-        pauseCircle = new Circle(pauseSprite.getX() + radius,pauseSprite.getY()+radius, radius);
-        RetryCircle = new Circle(RetrySprite.getX() + radius, RetrySprite.getY()+radius, radius);
-        SaveCircle = new Circle(SaveSprite.getX() + radius, SaveSprite.getY()+radius, radius);
+        // Circles for buttons
+        float radius = 80; // Approximate radius based on button sizes
+        pauseCircle = new Circle(80, 1360, radius);
+        RetryCircle = new Circle(260, 1360, radius);
+        SaveCircle = new Circle(520, 1370, radius);
     }
+
 
     @Override
     public void show() {
@@ -131,22 +113,29 @@ public class GameScreen implements Screen {
         game.getbatch().setProjectionMatrix(camera.combined);
 
         game.getbatch().begin();
+        // Background
         game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-        pauseSprite.draw(game.getbatch());
-        SlingshotSprite.draw(game.getbatch());
-        RetrySprite.draw(game.getbatch());
-        SaveSprite.draw(game.getbatch());
+        // Pause Button
+        game.getbatch().draw(pauseTexture, 0, 1250, 160, 160);
+        // Slingshot
+        game.getbatch().draw(new Texture("Slingshot.png"), 410, 160, 200, 200);
+        // Retry Button
+        game.getbatch().draw(RetryTexture, 180, 1250, 160, 160);
+        // Save Button
+        game.getbatch().draw(SaveTexture, 340, 1255, 247, 143);
 
-        redbirdSprite.draw(game.getbatch());
-        blackbirdSprite.draw(game.getbatch());
-        yellowbirdSprite.draw(game.getbatch());
+        // Birds
+        game.getbatch().draw(redBird.getFace(), 100, 180, 100, 100);
+        game.getbatch().draw(blackBird.getFace(), 200, 195, 90, 90);
+        game.getbatch().draw(yellowBird.getFace(), 300, 195, 80, 80);
 
-        kingPigSprite.draw(game.getbatch());
+        // Pigs
+        game.getbatch().draw(kingPiggy.getFace(), 2100, 290, 100, 100);
 
-        steelSprite.draw(game.getbatch());
-        iceSprite.draw(game.getbatch());
-        woodSprite.draw(game.getbatch());
-
+        // Structures
+        game.getbatch().draw(woodStructure.getFace(), 2000, 190, 100, 100);
+        game.getbatch().draw(steelStructure.getFace(), 2100, 190, 100, 100);
+        game.getbatch().draw(iceStructure.getFace(), 2200, 190, 100, 100);
         game.getbatch().end();
 
         if (Gdx.input.isTouched()){
@@ -157,7 +146,6 @@ public class GameScreen implements Screen {
                 game.setScreen(new PausedScreen(game));
             }
         }
-
         if (Gdx.input.isTouched()){
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
@@ -173,6 +161,16 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             game.setScreen(new WinScreen(game));
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+            game.setScreen(new SampleBallScreen(game));
+        }
+
+
+        world.step(1/60f, 6,2); // stepping which updates world objects through time
+        // what is does here is update bird trajectory, sr. movement, object falling. TO SAY updating physics each frame
+        //velocity and position iterations define qualty of simulation
+        debugRenderer.render(world, camera.combined); // to render physics bodies
+
     }
 
     @Override
@@ -195,5 +193,7 @@ public class GameScreen implements Screen {
         blackBird.dispose();
         yellowBird.dispose();
         kingPiggy.dispose();
+        world.dispose();
+        debugRenderer.dispose();
     }
 }
