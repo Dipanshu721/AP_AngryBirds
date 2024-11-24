@@ -3,7 +3,11 @@ package com.badlogic.drop;
 import com.badlogic.gdx.graphics.Texture;
 
 public class IceStructure extends Structure {
-    public IceStructure() {
-        Face = new Texture("ice_structure.jpg");  // Load steel texture
+
+    // Constructor that accepts texture path, position (x, y), width, and height
+    public IceStructure(String texturePath, int x, int y, int width, int height) {
+        super(texturePath, x, y, width, height);  // Call the parent constructor (Structure) with texture path, position, width, and height
     }
+
+    // Optional: Override render or other methods if needed for WoodStructure-specific behavior
 }

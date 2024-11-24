@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class blackbird extends Bird {
 
-    public blackbird(){
-        Face = new Texture("blackbird.png");
+    public blackbird(String imagePath, float x, float y) {
+        super(imagePath, x, y);  // Call the superclass constructor
     }
 }

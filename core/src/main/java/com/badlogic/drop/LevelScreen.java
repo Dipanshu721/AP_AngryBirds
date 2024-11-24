@@ -3,7 +3,9 @@ package com.badlogic.drop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -15,7 +17,11 @@ public class LevelScreen implements Screen {
     private Texture play1Texture;
     private Texture play2Texture;
     private Texture play3Texture;
+    private Sprite play1Sprite;
+    private Sprite play2Sprite;
+    private Sprite play3Sprite;
 
+    private OrthographicCamera camera;
     private Viewport viewport;
 
     public LevelScreen(Main game) {
@@ -29,7 +35,20 @@ public class LevelScreen implements Screen {
         play2Texture = new Texture(Gdx.files.internal("2.png"));
         play3Texture = new Texture(Gdx.files.internal("3.png"));
 
-        viewport = new FitViewport(1946, 1094);
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(1946, 1094, camera);
+
+        play1Sprite = new Sprite(play1Texture);
+        play2Sprite = new Sprite(play2Texture);
+        play3Sprite = new Sprite(play3Texture);
+
+        play1Sprite.setSize(450, 250);
+        play2Sprite.setSize(450, 250);
+        play3Sprite.setSize(450, 250);
+
+        play1Sprite.setPosition(213, 550);
+        play2Sprite.setPosition(751, 550);
+        play3Sprite.setPosition(1283, 550);
     }
 
     @Override
@@ -41,39 +60,45 @@ public class LevelScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
-        game.getbatch().setProjectionMatrix(viewport.getCamera().combined);
+        game.getbatch().setProjectionMatrix(camera.combined);
 
         game.getbatch().begin();
         game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-        game.getbatch().draw(play1Texture, 213, 550, 450, 250);
-        game.getbatch().draw(play2Texture, 751, 550, 450, 250);
-        game.getbatch().draw(play3Texture, 1283, 550, 450, 250);
+        play1Sprite.draw(game.getbatch());
+        play2Sprite.draw(game.getbatch());
+        play3Sprite.draw(game.getbatch());
         game.getbatch().end();
 
-        handleInput();
-    }
-
-    private void handleInput() {
-        Vector2 touchPos = new Vector2();
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isTouched()){
+            Vector2 touchPos = new Vector2();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            // Check if Level 1 button is clicked
-            if (touchPos.x >= 213 && touchPos.x <= 663 && touchPos.y >= 550 && touchPos.y <= 800) {
+            if (touchPos.x >= 213 && touchPos.x <= 663 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
+                game.setScreen(new StartScreen(game));
+            }
+
+            if (touchPos.x >= 751 && touchPos.x <= 1201 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
+                game.setScreen(new StartScreen(game));
+            }
+
+            if (touchPos.x >= 1283 && touchPos.x <= 1733 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
                 game.setScreen(new StartScreen(game));
             }
         }
     }
 
     @Override
-    public void pause() {}
+    public void hide() {
+    }
 
     @Override
-    public void resume() {}
+    public void pause() {
+    }
 
     @Override
-    public void hide() {}
+    public void resume() {
+    }
 
     @Override
     public void dispose() {
