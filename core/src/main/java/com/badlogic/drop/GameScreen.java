@@ -206,6 +206,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -215,6 +216,8 @@ import java.util.List;
 
 public class GameScreen implements Screen {
     private final Main game;
+    private World world;
+    private Box2DDebugRenderer debugRenderer;
 
     // Textures for UI and game objects
     private Texture backgroundTexture;
@@ -222,22 +225,23 @@ public class GameScreen implements Screen {
     private Texture retryTexture;
     private Texture saveTexture;
 
-    // Birds
-    private List<Bird> birds;
     private Texture redBirdTexture;
     private Texture blackBirdTexture;
     private Texture yellowBirdTexture;
-
-    // Pigs
-    private List<Piggy> piggies;
     private Texture kingPiggyTexture;
     private Texture normalPiggyTexture;
-
-    // Structures
-    private List<Structure> structures;
     private Texture woodStructureTexture;
     private Texture iceStructureTexture;
     private Texture steelStructureTexture;
+
+    // Birds
+    private List<Bird> birds;
+
+    // Pigs
+    private List<Piggy> piggies;
+
+    // Structures
+    private List<Structure> structures;
 
     // Utility objects for buttons
     private Circle pauseCircle;
@@ -271,6 +275,8 @@ public class GameScreen implements Screen {
         // Setup camera and viewport
         camera = new OrthographicCamera();
         viewport = new FitViewport(2560, 1440, camera);
+        world = new World(new Vector2(0, -9.8f), true);
+        debugRenderer = new Box2DDebugRenderer();
 
         // Initialize button areas
         float radius = 80;
@@ -286,35 +292,60 @@ public class GameScreen implements Screen {
 
         // Initialize structures
         assembleStructures();
+
+        createGround();
     }
 
     private void assembleBirds() {
         birds = new ArrayList<>();
-        birds.add(new redbird("redbird.png", 100, 180));
-        birds.add(new blackbird("blackbird.png", 200, 195));
-        birds.add(new yellowbird("yellowbird.png", 300, 195));
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+
+        birds.add(new redbird("redbird.png", 100, 200, bodyDef, world));
+        bodyDef.position.set(200, 195);
+        birds.add(new blackbird("blackbird.png", 200, 200, bodyDef, world));
+        bodyDef.position.set(300, 195);
+        birds.add(new yellowbird("yellowbird.png", 300, 200, bodyDef, world));
     }
 
     private void assemblePigs() {
         piggies = new ArrayList<>();
-        piggies.add(new normalPiggy("normalpiggy.png", 2100, 300));
-        piggies.add(new normalPiggy("normalpiggy.png", 2200, 300));
-        piggies.add(new kingPiggy("kingpiggy.png", 2300, 300));
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+
+        piggies.add(new normalPiggy("normalpiggy.png", 2100, 300, bodyDef, world));
+        piggies.add(new normalPiggy("normalpiggy.png", 2200, 300, bodyDef, world));
+        piggies.add(new kingPiggy("kingpiggy.png", 2300, 300, bodyDef, world));
     }
 
     private void assembleStructures() {
         structures = new ArrayList<>();
-        structures.add(new WoodStructure("wood.png", 1950, 320, 250, 60));  // Custom width and height
-        structures.add(new IceStructure("glass.png", 1700, 260, 250, 60));
-        structures.add(new IceStructure("glass.png", 1950, 260, 250, 60));
-        structures.add(new IceStructure("glass.png", 2200, 260, 250, 60));
-        structures.add(new SteelStructure("stone.png", 1700, 200, 250, 60));
-        structures.add(new SteelStructure("stone.png", 1950, 200, 250, 60));
-        structures.add(new SteelStructure("stone.png", 2200, 200, 250, 60));
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
 
-        structures.add(new SteelStructure("stone.png", 1700, 200, 250, 60));
-        structures.add(new SteelStructure("stone.png", 1950, 200, 250, 60));
-        structures.add(new SteelStructure("stone.png", 2200, 200, 250, 60));
+        structures.add(new WoodStructure("wood.png", 1950, 320, 250, 60, bodyDef, world));
+        structures.add(new IceStructure("glass.png", 1700, 260, 250, 60, bodyDef, world));
+        structures.add(new IceStructure("glass.png", 1950, 260, 250, 60, bodyDef, world));
+        structures.add(new IceStructure("glass.png", 2200, 260, 250, 60, bodyDef, world));
+        structures.add(new SteelStructure("stone.png", 1700, 200, 250, 60, bodyDef, world));
+        structures.add(new SteelStructure("stone.png", 1950, 200, 250, 60, bodyDef, world));
+        structures.add(new SteelStructure("stone.png", 2200, 200, 250, 60, bodyDef, world));
+    }
+
+    private void createGround() {
+        BodyDef groundDef = new BodyDef();
+        groundDef.type = BodyDef.BodyType.StaticBody;
+        groundDef.position.set(1280 / 2f, 200f); // Center ground horizontally, near bottom
+
+        Body groundBody = world.createBody(groundDef);
+
+        PolygonShape groundShape = new PolygonShape();
+        groundShape.setAsBox(1280 / 2f, 10); // Full width of the viewport
+
+        FixtureDef groundFixture = new FixtureDef();
+        groundFixture.shape = groundShape;
+        groundBody.createFixture(groundFixture);
+        groundShape.dispose();
     }
 
 
@@ -328,7 +359,7 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         game.getbatch().setProjectionMatrix(camera.combined);
-
+        world.step(1 / 60f, 6, 2);
         game.getbatch().begin();
 
         // Draw background
@@ -357,6 +388,8 @@ public class GameScreen implements Screen {
         game.getbatch().end();
 
         handleInput();
+        // Render physics bodies
+        debugRenderer.render(world, camera.combined);
     }
 
     private void handleInput() {
@@ -372,7 +405,7 @@ public class GameScreen implements Screen {
                 game.setScreen(new GameScreen(game));
             }
             if (saveCircle.contains(touchPos.x, touchPos.y)) {
-                // Handle save logic here (if required)
+                //need to  Handle save logic here
                 Gdx.app.log("Save", "Game saved!");
             }
         }

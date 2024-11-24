@@ -67,7 +67,6 @@ public class SampleBallScreen implements Screen {
         assert groundBody != null;
         groundBody.createFixture(groundBox, 0.0f);
         groundBox.dispose();
-
     }
 
     @Override
