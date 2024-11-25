@@ -292,7 +292,7 @@ public class GameScreen implements Screen {
 
         // Initialize structures
         assembleStructures();
-
+        // create ground
         createGround();
     }
 
