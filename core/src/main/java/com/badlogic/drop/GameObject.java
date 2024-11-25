@@ -9,20 +9,23 @@ public abstract class GameObject {
     protected Texture texture;
     protected Body body;
 
-    public GameObject(String texturePath, BodyDef bodyDef, World world) {
+    public GameObject(String texturePath, float x, float y, World world) {
         this.texture = new Texture(texturePath);
-        this.body = world.createBody(bodyDef);  // Create body in the world
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x, y);
+        this.body = world.createBody(bodyDef); // Body creation logic
     }
 
     public void dispose() {
-        texture.dispose();
+        texture.dispose();  // Dispose of texture when no longer needed
     }
 
     public Texture getTexture() {
-        return texture;
+        return texture; // Return texture to be used
     }
 
     public Body getBody() {
-        return body;
+        return body; // Return body for physics
     }
 }

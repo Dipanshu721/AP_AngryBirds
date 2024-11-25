@@ -298,49 +298,39 @@ public class GameScreen implements Screen {
 
     private void assembleBirds() {
         birds = new ArrayList<>();
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-
-        birds.add(new redbird("redbird.png", 100, 200, bodyDef, world));
-        bodyDef.position.set(200, 195);
-        birds.add(new blackbird("blackbird.png", 200, 200, bodyDef, world));
-        bodyDef.position.set(300, 195);
-        birds.add(new yellowbird("yellowbird.png", 300, 200, bodyDef, world));
+        birds.add(new redbird(100, 225, world));
+        birds.add(new blackbird(200, 225, world));
+        birds.add(new yellowbird(300, 225, world));
     }
 
     private void assemblePigs() {
         piggies = new ArrayList<>();
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-
-        piggies.add(new normalPiggy("normalpiggy.png", 2100, 300, bodyDef, world));
-        piggies.add(new normalPiggy("normalpiggy.png", 2200, 300, bodyDef, world));
-        piggies.add(new kingPiggy("kingpiggy.png", 2300, 300, bodyDef, world));
+        piggies.add(new normalPiggy(2100, 300, world));
+        piggies.add(new normalPiggy(2200, 300, world));
+        piggies.add(new kingPiggy(2300, 300, world));
     }
 
     private void assembleStructures() {
         structures = new ArrayList<>();
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-
-        structures.add(new WoodStructure("wood.png", 1950, 320, 250, 60, bodyDef, world));
-        structures.add(new IceStructure("glass.png", 1700, 260, 250, 60, bodyDef, world));
-        structures.add(new IceStructure("glass.png", 1950, 260, 250, 60, bodyDef, world));
-        structures.add(new IceStructure("glass.png", 2200, 260, 250, 60, bodyDef, world));
-        structures.add(new SteelStructure("stone.png", 1700, 200, 250, 60, bodyDef, world));
-        structures.add(new SteelStructure("stone.png", 1950, 200, 250, 60, bodyDef, world));
-        structures.add(new SteelStructure("stone.png", 2200, 200, 250, 60, bodyDef, world));
+        structures.add(new WoodStructure(1950, 320, 250, 60, world));
+        structures.add(new IceStructure(1700, 260, 250, 60, world));
+        structures.add(new IceStructure(1950, 260, 250, 60, world));
+        structures.add(new IceStructure(2200, 260, 250, 60, world));
+        structures.add(new SteelStructure(1700, 200, 250, 60, world));
+        structures.add(new SteelStructure(1950, 200, 250, 60, world));
+        structures.add(new SteelStructure(2200, 200, 250, 60, world));
     }
+
 
     private void createGround() {
         BodyDef groundDef = new BodyDef();
         groundDef.type = BodyDef.BodyType.StaticBody;
-        groundDef.position.set(1280 / 2f, 200f); // Center ground horizontally, near bottom
+        groundDef.position.set(1280 / 2f, 200); // Center ground horizontally, near bottom
 
         Body groundBody = world.createBody(groundDef);
 
         PolygonShape groundShape = new PolygonShape();
-        groundShape.setAsBox(1280 / 2f, 10); // Full width of the viewport
+        groundShape.setAsBox(2560, 0); // Full width of the viewport
 
         FixtureDef groundFixture = new FixtureDef();
         groundFixture.shape = groundShape;
@@ -372,18 +362,19 @@ public class GameScreen implements Screen {
 
         // Draw birds
         for (Bird bird : birds) {
-            game.getbatch().draw(bird.getFace(), bird.getX(), bird.getY(), 100, 100);
+            game.getbatch().draw(bird.getTexture(), bird.getX(), bird.getY(), 100, 100);
         }
 
-        // Draw pigs
+// Draw pigs
         for (Piggy piggy : piggies) {
-            game.getbatch().draw(piggy.getFace(), piggy.getX(), piggy.getY(), 100, 100);
+            game.getbatch().draw(piggy.getTexture(), piggy.getX(), piggy.getY(), 100, 100);
         }
 
-        // Draw structures
+// Draw structures
         for (Structure structure : structures) {
             game.getbatch().draw(structure.getTexture(), structure.getX(), structure.getY(), structure.getWidth(), structure.getHeight());
         }
+
 
         game.getbatch().end();
 

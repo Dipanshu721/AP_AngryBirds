@@ -4,59 +4,35 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Piggy extends GameObject {
-    // Protected texture for the pig
-    protected Texture Face;
 
-    // Position of the pig
-    private float x, y;
+    protected float x;  // X position of the object
+    protected float y;  // Y position of the object
+    protected int height= 100;
+    protected float width = 100;
 
-    // Constructor for setting the texture and position
-    public Piggy(String texturePath, float x, float y, BodyDef bodyDef, World world) {
-        super(texturePath, bodyDef, world);
-        bodyDef.position.set(x, y);
-        this.Face = new Texture(texturePath);  // Load the texture based on the path
-        this.x = x;                            // Set the X position
-        this.y = y;                            // Set the Y position
-
-        // Set position
-        bodyDef.position.set(x, y);
-        Body body = world.createBody(bodyDef);
-
-        // Define a square shape (simpler for collision detection)
+    public Piggy(String texturePath, float x, float y, World world) {
+        super(texturePath, x, y, world);  // Passing the parameters to the parent constructor
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(0.5f, 0.5f); // 1x1 meter square (adjust as needed)
+        shape.setAsBox(width / 2f, height / 2f); // Adjusting size for the pig's shape
 
-        // Define fixture properties
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.0f; // Set density for collision response
-        fixtureDef.friction = 0.5f; // Friction when sliding
-        fixtureDef.restitution = 0.3f; // Slight bounce on impact
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.3f;  // Bounciness factor for pigs
 
         body.createFixture(fixtureDef); // Attach the fixture to the body
-        shape.dispose(); // Dispose of the shape once it's no longer needed
-
+        shape.dispose();  // Clean up shape after use
     }
-
-    // Getter for the pig's face (texture)
-    public Texture getFace() {
-        return Face;
-    }
-
-    // Getter for the pig's X position
     public float getX() {
-        return x;
+        return body.getPosition().x;
     }
 
-    // Getter for the pig's Y position
     public float getY() {
-        return y;
+        return body.getPosition().y;
     }
 
-    // Method to dispose of the pig texture when not needed
     public void dispose() {
-        if (Face != null) {
-            Face.dispose();
-        }
+        super.dispose();  // Call parent's dispose
     }
 }

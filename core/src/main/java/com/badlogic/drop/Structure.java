@@ -3,78 +3,55 @@ package com.badlogic.drop;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.*;
 
-public abstract class Structure extends GameObject{
+public abstract class Structure extends GameObject {
 
-    protected int x;  // X position of the structure
-    protected int y;  // Y position of the structure
-    protected int width;  // Width of the structure
-    protected int height;  // Height of the structure
+    private float width;
+    private float height;
 
-    // Constructor that initializes the texture and position
-    public Structure(String texturePath, int x, int y,int width, int height, BodyDef bodyDef, World world) {
-        super(texturePath, bodyDef, world);
-        this.texture = new Texture(texturePath);// Create the texture using the given texture path
-        bodyDef.position.set(x, y);  // Set position for each structure
-        this.x = (int) x;  // Set X position
-        this.y = (int) y;  // Set Y position
-        this.width = width;  // Set width of the structure
-        this.height = height;  // Set height of the structure
+    public Structure(String texturePath, float x, float y, float width, float height, World world) {
+        super(texturePath, x, y, world);
 
+        this.width = width; // Initialize width and height
+        this.height = height;
+
+        // Define the body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(x, y);
-        Body body = world.createBody(bodyDef);
+        this.body = world.createBody(bodyDef);
 
+        // Define the shape and attach it to the body
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 2f, height / 2f);
+        shape.setAsBox(width / 2f, height / 2f); // Box dimensions in Box2D units
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.0f;
+        fixtureDef.density = 1.5f;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0.1f;
 
         body.createFixture(fixtureDef);
-        shape.dispose();
+        shape.dispose(); // Clean up shape
+    }
+    public float getX() {
+        return body.getPosition().x;
     }
 
-    // Dispose of the texture when no longer needed
-    public void dispose() {
-        texture.dispose();
+    public float getY() {
+        return body.getPosition().y;
     }
 
-    // Getter for the texture
-    public Texture getTexture() {
-        return texture;
-    }
 
-    // Getters and setters for position
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    // Getters and setters for width and height
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    @Override
+    public void dispose() {
+        super.dispose(); // Dispose of texture
     }
 }

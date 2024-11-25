@@ -3,60 +3,43 @@ package com.badlogic.drop;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.*;
 
-public abstract class Bird extends GameObject{
+public abstract class Bird extends GameObject {
 
-    protected Texture Face;
-    protected float x;  // Position X
-    protected float y;  // Position Y
+    protected float x;  // X position of the object
+    protected float y;  // Y position of the object
+    protected int height= 100;
+    protected float width = 100;
 
+    public Bird(String texturePath, float x, float y, World world) {
+        super(texturePath, x, y, world);  // Pass the texture path to the parent constructor
 
-    public Bird(String texturePath, float x, float y, BodyDef bodyDef, World world) {
-        super(texturePath, bodyDef, world);
-        bodyDef.position.set(x, y);  // Set the bird's unique position
-        this.Face = new Texture(texturePath);
-
-        // Set position
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
-        Body body = world.createBody(bodyDef);
+        this.body = world.createBody(bodyDef);
 
-        // Define a square shape (for simplicity)
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(0.5f, 0.5f); // Adjust size as needed
+        shape.setAsBox(width / 2f, height / 2f); // Box dimensions
 
-        // Define fixture properties
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.2f; // Higher density for birds
+        fixtureDef.density = 1.2f;
         fixtureDef.friction = 0.3f;
-        fixtureDef.restitution = 0.6f; // Make it bouncy for "angry" effect
+        fixtureDef.restitution = 0.6f;
 
         body.createFixture(fixtureDef);
         shape.dispose();
-
     }
-
-    public void dispose() {
-        Face.dispose();
-    }
-
-    public Texture getFace() {
-        return Face;
-    }
-
-    // Getters and Setters for x and y
     public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
+        return body.getPosition().x;
     }
 
     public float getY() {
-        return y;
+        return body.getPosition().y;
     }
 
-    public void setY(float y) {
-        this.y = y;
+
+    public void dispose() {
+        super.dispose(); // Cleanup
     }
 }
