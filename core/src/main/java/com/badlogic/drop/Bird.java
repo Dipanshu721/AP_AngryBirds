@@ -1,6 +1,8 @@
 package com.badlogic.drop;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Bird extends GameObject {
@@ -8,7 +10,7 @@ public abstract class Bird extends GameObject {
     protected float x;  // X position of the object
     protected float y;  // Y position of the object
     protected int height= 100;
-    protected float width = 100;
+    protected int width = 100;
 
     public Bird(String texturePath, float x, float y, World world) {
         super(texturePath, x, y, world);  // Pass the texture path to the parent constructor
@@ -38,6 +40,12 @@ public abstract class Bird extends GameObject {
         return body.getPosition().y;
     }
 
+    public void render(SpriteBatch spriteBatch) {
+        Vector2 position = body.getPosition();
+        float renderX = position.x - (width / 2f);  // Use actual width and height
+        float renderY = position.y - (height / 2f);
+        spriteBatch.draw(texture, renderX, renderY, width, height);
+    }
 
     public void dispose() {
         super.dispose(); // Cleanup

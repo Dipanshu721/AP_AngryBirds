@@ -298,39 +298,44 @@ public class GameScreen implements Screen {
 
     private void assembleBirds() {
         birds = new ArrayList<>();
-        birds.add(new redbird(100, 225, world));
-        birds.add(new blackbird(200, 225, world));
-        birds.add(new yellowbird(300, 225, world));
+        birds.add(new redbird(100, 205, world));
+        birds.add(new blackbird(200, 205, world));
+        birds.add(new yellowbird(300, 205, world));
     }
 
     private void assemblePigs() {
         piggies = new ArrayList<>();
-        piggies.add(new normalPiggy(2100, 300, world));
-        piggies.add(new normalPiggy(2200, 300, world));
-        piggies.add(new kingPiggy(2300, 300, world));
+        piggies.add(new normalPiggy(2025, 670, world));
+        piggies.add(new normalPiggy(2025, 950, world));
     }
 
     private void assembleStructures() {
         structures = new ArrayList<>();
-        structures.add(new WoodStructure(1950, 320, 250, 60, world));
-        structures.add(new IceStructure(1700, 260, 250, 60, world));
-        structures.add(new IceStructure(1950, 260, 250, 60, world));
-        structures.add(new IceStructure(2200, 260, 250, 60, world));
-        structures.add(new SteelStructure(1700, 200, 250, 60, world));
-        structures.add(new SteelStructure(1950, 200, 250, 60, world));
-        structures.add(new SteelStructure(2200, 200, 250, 60, world));
+        structures.add(new WoodStructure(1950, 350, 40, 300, world));
+        structures.add(new WoodStructure(2160, 350, 40, 300, world));
+        structures.add(new WoodStructure(1950, 650, 250, 40, world));
+        structures.add(new WoodStructure(1950, 650, 40, 300, world));
+        structures.add(new WoodStructure(2160, 650, 40, 300, world));
+        structures.add(new WoodStructure(1950, 950, 250, 40, world));
+
+        structures.add(new SteelStructure(1700, 290, 250, 60, world));
+        structures.add(new SteelStructure(1950, 290, 250, 60, world));
+        structures.add(new SteelStructure(2200, 290, 250, 60, world));
+        structures.add(new SteelStructure(1700, 230, 250, 60, world));
+        structures.add(new SteelStructure(1950, 230, 250, 60, world));
+        structures.add(new SteelStructure(2200, 230, 250, 60, world));
     }
 
 
     private void createGround() {
         BodyDef groundDef = new BodyDef();
         groundDef.type = BodyDef.BodyType.StaticBody;
-        groundDef.position.set(1280 / 2f, 200); // Center ground horizontally, near bottom
+        groundDef.position.set(1280, 200); // Center horizontally, small height at bottom
 
         Body groundBody = world.createBody(groundDef);
 
         PolygonShape groundShape = new PolygonShape();
-        groundShape.setAsBox(2560, 0); // Full width of the viewport
+        groundShape.setAsBox(1280, 0); // Width = 2560, Height = 2 (half-dimensions)
 
         FixtureDef groundFixture = new FixtureDef();
         groundFixture.shape = groundShape;
@@ -353,28 +358,27 @@ public class GameScreen implements Screen {
         game.getbatch().begin();
 
         // Draw background
-        game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+//        game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
 
         // Draw buttons
         game.getbatch().draw(pauseTexture, 0, 1250, 160, 160);
         game.getbatch().draw(retryTexture, 180, 1250, 160, 160);
         game.getbatch().draw(saveTexture, 340, 1255, 247, 143);
 
-        // Draw birds
+        // Render birds
         for (Bird bird : birds) {
-            game.getbatch().draw(bird.getTexture(), bird.getX(), bird.getY(), 100, 100);
+            bird.render(game.getbatch());
         }
 
-// Draw pigs
+// Render pigs
         for (Piggy piggy : piggies) {
-            game.getbatch().draw(piggy.getTexture(), piggy.getX(), piggy.getY(), 100, 100);
+            piggy.render(game.getbatch());
         }
 
-// Draw structures
+// Render structures
         for (Structure structure : structures) {
-            game.getbatch().draw(structure.getTexture(), structure.getX(), structure.getY(), structure.getWidth(), structure.getHeight());
+            structure.render(game.getbatch());
         }
-
 
         game.getbatch().end();
 
@@ -382,6 +386,7 @@ public class GameScreen implements Screen {
         // Render physics bodies
         debugRenderer.render(world, camera.combined);
     }
+
 
     private void handleInput() {
         // Handle touch input

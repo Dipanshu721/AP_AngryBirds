@@ -1,6 +1,8 @@
 package com.badlogic.drop;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Piggy extends GameObject {
@@ -32,6 +34,14 @@ public abstract class Piggy extends GameObject {
         return body.getPosition().y;
     }
 
+    public void render(SpriteBatch spriteBatch) {
+        Vector2 position = body.getPosition();
+        float renderX = position.x - (width / 2f);  // Use actual width and height
+        float renderY = position.y - (height / 2f);
+        spriteBatch.draw(texture, renderX, renderY, width, height);
+    }
+
+    @Override
     public void dispose() {
         super.dispose();  // Call parent's dispose
     }
