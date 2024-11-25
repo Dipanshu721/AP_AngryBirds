@@ -292,31 +292,33 @@ public class GameScreen implements Screen {
 
         // Initialize structures
         assembleStructures();
+
         // create ground
         createGround();
     }
 
     private void assembleBirds() {
         birds = new ArrayList<>();
-        birds.add(new redbird(100, 205, world));
+        birds.add(new redbird(100, 555, world));
         birds.add(new blackbird(200, 205, world));
         birds.add(new yellowbird(300, 205, world));
     }
 
     private void assemblePigs() {
         piggies = new ArrayList<>();
-        piggies.add(new normalPiggy(2025, 670, world));
-        piggies.add(new normalPiggy(2025, 950, world));
+        piggies.add(new normalPiggy(1950, 670, world));
+        piggies.add(new normalPiggy(1950, 1040, world));
     }
 
     private void assembleStructures() {
         structures = new ArrayList<>();
-        structures.add(new WoodStructure(1950, 350, 40, 300, world));
-        structures.add(new WoodStructure(2160, 350, 40, 300, world));
-        structures.add(new WoodStructure(1950, 650, 250, 40, world));
-        structures.add(new WoodStructure(1950, 650, 40, 300, world));
-        structures.add(new WoodStructure(2160, 650, 40, 300, world));
-        structures.add(new WoodStructure(1950, 950, 250, 40, world));
+        structures.add(new WoodStructure(1800, 470, 40, 300, world));
+        structures.add(new WoodStructure(2100, 470, 40, 300, world));
+        structures.add(new WoodStructure(1950, 645, 350, 40, world));
+        structures.add(new WoodStructure(1800, 830, 40, 300, world));
+        structures.add(new WoodStructure(2100, 830, 40, 300, world));
+        structures.add(new WoodStructure(1950, 1020, 350, 40, world));
+
 
         structures.add(new SteelStructure(1700, 290, 250, 60, world));
         structures.add(new SteelStructure(1950, 290, 250, 60, world));

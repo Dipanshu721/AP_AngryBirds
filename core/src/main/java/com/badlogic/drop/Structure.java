@@ -22,18 +22,19 @@ public abstract class Structure extends GameObject {
         bodyDef.position.set(x, y);
         this.body = world.createBody(bodyDef);
 
+
         // Define the shape and attach it to the body
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width / 2f, height / 2f); // Box dimensions in Box2D units
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.5f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.1f;
+        fixtureDef.density = 2.0f;
+        fixtureDef.friction = 0.7f;
+        fixtureDef.restitution = 0.2f;
 
         body.createFixture(fixtureDef);
-        shape.dispose(); // Clean up shape
+        shape.dispose(); //dispose it
     }
     public float getX() {
         return body.getPosition().x;
@@ -47,7 +48,11 @@ public abstract class Structure extends GameObject {
         Vector2 position = body.getPosition();
         float renderX = position.x - (width / 2f);  // Use actual width and height
         float renderY = position.y - (height / 2f);
-        spriteBatch.draw(texture, renderX, renderY, width, height);
+        float rotation = (float) Math.toDegrees(body.getAngle()); // Convert radians to degrees
+
+        spriteBatch.draw(texture, renderX, renderY, width / 2f, height / 2f, width, height,
+            1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(),
+            false, false);
     }
 
 

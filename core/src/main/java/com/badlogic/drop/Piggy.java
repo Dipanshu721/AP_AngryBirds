@@ -38,7 +38,11 @@ public abstract class Piggy extends GameObject {
         Vector2 position = body.getPosition();
         float renderX = position.x - (width / 2f);  // Use actual width and height
         float renderY = position.y - (height / 2f);
-        spriteBatch.draw(texture, renderX, renderY, width, height);
+        float rotation = (float) Math.toDegrees(body.getAngle()); // Convert radians to degrees
+
+        spriteBatch.draw(texture, renderX, renderY, width / 2f, height / 2f, width, height,
+            1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(),
+            false, false);
     }
 
     @Override
