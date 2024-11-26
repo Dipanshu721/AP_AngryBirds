@@ -1,4 +1,3 @@
-
 package com.badlogic.drop;
 
 import com.badlogic.gdx.Gdx;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -18,12 +16,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameScreen implements Screen {
+public class GameScreen2 implements Screen {
     private final Main game;
     private World world;
     private Box2DDebugRenderer debugRenderer;
-    private Stage stage;
-
 
     // Textures for UI and game objects
     private Texture backgroundTexture;
@@ -58,7 +54,7 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
 
-    public GameScreen(Main game) {
+    public GameScreen2(Main game) {
         this.game = game;
         create();
     }
@@ -80,73 +76,64 @@ public class GameScreen implements Screen {
 
         // Setup camera and viewport
         camera = new OrthographicCamera();
-        viewport = new FitViewport(256, 144, camera);
+        viewport = new FitViewport(2560, 1440, camera);
         world = new World(new Vector2(0, -9.8f), true);
         debugRenderer = new Box2DDebugRenderer();
-        stage = new Stage(viewport);
-        Gdx.input.setInputProcessor(stage);
 
         // Initialize button areas
         float radius = 80;
-        pauseCircle  = new Circle(8,  136, radius);
-        retryCircle  = new Circle(26, 136, radius);
-        saveCircle   = new Circle(52, 137, radius);
+        pauseCircle = new Circle(80, 1360, radius);
+        retryCircle = new Circle(260, 1360, radius);
+        saveCircle = new Circle(520, 1370, radius);
 
         // Initialize birds
-        birds = new ArrayList<>();
         assembleBirds();
+
         // Initialize pigs
         assemblePigs();
+
         // Initialize structures
         assembleStructures();
-
-        Bird initialBird = birds.get(0); // Use the first bird for the slingshot
-        Slingshot slingshot = new Slingshot(initialBird);
-        stage.addActor(slingshot); // Add slingshot to the stage
-
 
         // create ground
         createGround();
     }
 
     private void assembleBirds() {
-        birds.add(new redbird(30, 49.5f, world));
-        birds.add(new blackbird(45, 22.5f, world));
-        birds.add(new yellowbird(57, 22.5f, world));
+        birds = new ArrayList<>();
+        birds.add(new redbird(100, 555, world));
+        birds.add(new blackbird(200, 205, world));
+        birds.add(new yellowbird(300, 205, world));
     }
 
     private void assemblePigs() {
         piggies = new ArrayList<>();
-        piggies.add(new normalPiggy(195, 67, world));
-        piggies.add(new normalPiggy(195, 104, world));
+        piggies.add(new normalPiggy(1930, 200, world));
+        piggies.add(new normalPiggy(1930, 400, world));
     }
 
     private void assembleStructures() {
         structures = new ArrayList<>();
-        structures.add(new WoodStructure(180, 47, 4, 30, world));
-        structures.add(new WoodStructure(210, 47, 4, 30, world));
-        structures.add(new WoodStructure(195, 64.5f, 35, 4, world));
-        structures.add(new WoodStructure(180, 83, 4, 30, world));
-        structures.add(new WoodStructure(210, 83, 4, 30, world));
-        structures.add(new WoodStructure(195, 102, 35, 4, world));
+        // Adding stone structures
+        structures.add(new SteelStructure(1800, 255, 45.5f, 150f, world));
+        structures.add(new SteelStructure(2050, 255, 45.5f, 150f, world));
+        structures.add(new SteelStructure(1925, 342, 300f, 45.5f, world));
 
-        structures.add(new SteelStructure(170, 29, 25, 6, world));
-        structures.add(new SteelStructure(195, 29, 25, 6, world));
-        structures.add(new SteelStructure(220, 29, 25, 6, world));
-        structures.add(new SteelStructure(170, 23, 25, 6, world));
-        structures.add(new SteelStructure(195, 23, 25, 6, world));
-        structures.add(new SteelStructure(220, 23, 25, 6, world));
+        // Adding wood structures
+        structures.add(new WoodStructure(1800, 500, 45.5f, 150f, world));
+        structures.add(new WoodStructure(2050, 500, 45.5f, 150f, world));
+        structures.add(new WoodStructure(1925, 555, 300f, 45.5f, world));
     }
 
     private void createGround() {
         BodyDef groundDef = new BodyDef();
         groundDef.type = BodyDef.BodyType.StaticBody;
-        groundDef.position.set(128, 20); // Center horizontally, small height at bottom
+        groundDef.position.set(1280, 200); // Center horizontally, small height at bottom
 
         Body groundBody = world.createBody(groundDef);
 
         PolygonShape groundShape = new PolygonShape();
-        groundShape.setAsBox(128, 0); // Width = 2560, Height = 2 (half-dimensions)
+        groundShape.setAsBox(1280, 0); // Width = 2560, Height = 2 (half-dimensions)
 
         FixtureDef groundFixture = new FixtureDef();
         groundFixture.shape = groundShape;
@@ -172,33 +159,32 @@ public class GameScreen implements Screen {
 //        game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
 
         // Draw buttons
-        game.getbatch().draw(pauseTexture, 0, 125, 16, 16);
-        game.getbatch().draw(retryTexture, 18, 125, 16, 16);
-        game.getbatch().draw(saveTexture, 34, 125.5f, 24.7f, 14.3f);
+        game.getbatch().draw(pauseTexture, 0, 1250, 160, 160);
+        game.getbatch().draw(retryTexture, 180, 1250, 160, 160);
+        game.getbatch().draw(saveTexture, 340, 1255, 247, 143);
 
         // Render birds
         for (Bird bird : birds) {
             bird.render(game.getbatch());
         }
 
-        // Render pigs
+// Render pigs
         for (Piggy piggy : piggies) {
             piggy.render(game.getbatch());
         }
 
-        // Render structures
+// Render structures
         for (Structure structure : structures) {
             structure.render(game.getbatch());
         }
 
         game.getbatch().end();
-        stage.act(delta);
-        stage.draw();
 
         handleInput();
         // Render physics bodies
         debugRenderer.render(world, camera.combined);
     }
+
 
     private void handleInput() {
         // Handle touch input
@@ -246,7 +232,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override

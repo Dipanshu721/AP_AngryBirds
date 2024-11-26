@@ -29,9 +29,9 @@ public abstract class Structure extends GameObject {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 2.0f;
-        fixtureDef.friction = 0.7f;
-        fixtureDef.restitution = 0.2f;
+        fixtureDef.density = 2.2f;
+        fixtureDef.friction = 0.8f;
+        fixtureDef.restitution = 0.15f;
 
         body.createFixture(fixtureDef);
         shape.dispose(); //dispose it

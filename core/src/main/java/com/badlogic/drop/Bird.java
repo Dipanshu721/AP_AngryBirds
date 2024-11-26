@@ -1,22 +1,20 @@
 package com.badlogic.drop;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Bird extends GameObject {
 
-    protected float x;  // X position of the object
-    protected float y;  // Y position of the object
-    protected int height= 100;
-    protected int width = 100;
+    private boolean launched = false; // Launch state
+    protected int height = 10;
+    protected int width = 10;
 
     public Bird(String texturePath, float x, float y, World world) {
-        super(texturePath, x, y, world);  // Pass the texture path to the parent constructor
+        super(texturePath, x, y, world); // Pass to parent
 
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(x, y);
         this.body = world.createBody(bodyDef);
 
@@ -25,13 +23,33 @@ public abstract class Bird extends GameObject {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.2f;
-        fixtureDef.friction = 0.3f;
-        fixtureDef.restitution = 0.6f;
+        fixtureDef.density = 1.4f;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0.4f;
 
         body.createFixture(fixtureDef);
         shape.dispose();
     }
+
+    public void launch(float velocity, float angle) {
+        body.setType(BodyDef.BodyType.DynamicBody);  // Ensure the body is dynamic
+        body.setAwake(true); // Wake the body up
+        launched = true; // Mark as launched
+
+        // Apply impulse in the direction of the drag
+        float impulseX = (float) (Math.pow(10, 10)*velocity * Math.cos(angle));
+        float impulseY = (float) (Math.pow(10, 10)*velocity * Math.sin(angle));
+
+        // Apply impulse directly to the body
+        body.applyLinearImpulse(new Vector2((float) impulseX, (float) impulseY), body.getWorldCenter(), true);
+        System.out.println("Impulse applied: " + impulseX + ", " + impulseY);
+    }
+
+
+    public boolean isLaunched() {
+        return launched;
+    }
+
     public float getX() {
         return body.getPosition().x;
     }
@@ -42,16 +60,17 @@ public abstract class Bird extends GameObject {
 
     public void render(SpriteBatch spriteBatch) {
         Vector2 position = body.getPosition();
-        float renderX = position.x - (width / 2f);  // Use actual width and height
+        float renderX = position.x - (width / 2f);
         float renderY = position.y - (height / 2f);
-        float rotation = (float) Math.toDegrees(body.getAngle()); // Convert radians to degrees
+        float rotation = (float) Math.toDegrees(body.getAngle());
 
         spriteBatch.draw(texture, renderX, renderY, width / 2f, height / 2f, width, height,
             1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(),
             false, false);
     }
 
+    @Override
     public void dispose() {
-        super.dispose(); // Cleanup
+        super.dispose();
     }
 }

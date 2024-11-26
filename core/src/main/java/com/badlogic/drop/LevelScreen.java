@@ -75,11 +75,11 @@ public class LevelScreen implements Screen {
             viewport.unproject(touchPos);
 
             if (touchPos.x >= 213 && touchPos.x <= 663 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
-                game.setScreen(new StartScreen(game));
+                game.setScreen(new GameScreen(game));
             }
 
             if (touchPos.x >= 751 && touchPos.x <= 1201 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
-                game.setScreen(new StartScreen(game));
+                game.setScreen(new GameScreen2(game));
             }
 
             if (touchPos.x >= 1283 && touchPos.x <= 1733 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
