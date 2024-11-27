@@ -172,7 +172,7 @@ public class GameScreen implements Screen {
         game.getbatch().begin();
 
         // Draw background
-//        game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
 
         // Draw buttons
         game.getbatch().draw(pauseTexture, 0, 125, 16, 16);

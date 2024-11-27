@@ -37,7 +37,7 @@ public abstract class Bird extends GameObject {
     public void launch(float velocity, float angle) {
         body.setType(BodyDef.BodyType.DynamicBody);  // Ensure the body is dynamic
         body.setAwake(true); // Wake the body up
-        launched = true; // Mark as launched
+        launched = true; // Mark it launched
 
         // Apply impulse in the direction of the drag
         float impulseX = (float) (Math.pow(10, 10)*velocity * Math.cos(angle));
