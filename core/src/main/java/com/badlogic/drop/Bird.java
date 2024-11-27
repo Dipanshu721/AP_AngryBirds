@@ -7,8 +7,9 @@ import com.badlogic.gdx.physics.box2d.*;
 public abstract class Bird extends GameObject {
 
     private boolean launched = false; // Launch state
-    protected int height = 10;
-    protected int width = 10;
+    protected int height = 9;
+    protected int width = 9;
+    protected World world;
 
     public Bird(String texturePath, float x, float y, World world) {
         super(texturePath, x, y, world); // Pass to parent
@@ -17,15 +18,17 @@ public abstract class Bird extends GameObject {
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(x, y);
         this.body = world.createBody(bodyDef);
+        this.world = world;
 
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 2f, height / 2f); // Box dimensions
+        CircleShape shape = new CircleShape();
+        shape.setRadius(width / 2f); // Adjust the radius to the bird's size
+
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.4f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.4f;
+        fixtureDef.density = 1.6f;
+        fixtureDef.friction = 0.6f;
+        fixtureDef.restitution = 0.5f;
 
         body.createFixture(fixtureDef);
         shape.dispose();
@@ -42,9 +45,11 @@ public abstract class Bird extends GameObject {
 
         // Apply impulse directly to the body
         body.applyLinearImpulse(new Vector2((float) impulseX, (float) impulseY), body.getWorldCenter(), true);
-        System.out.println("Impulse applied: " + impulseX + ", " + impulseY);
     }
 
+    public void setPosition(float x, float y) {
+        body.setTransform(x, y, body.getAngle()); // Move the bird's body in Box2D
+    }
 
     public boolean isLaunched() {
         return launched;
@@ -68,6 +73,8 @@ public abstract class Bird extends GameObject {
             1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(),
             false, false);
     }
+
+    public abstract void activateSpecialAbility();
 
     @Override
     public void dispose() {

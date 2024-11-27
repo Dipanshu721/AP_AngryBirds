@@ -14,14 +14,15 @@ public abstract class Piggy extends GameObject {
 
     public Piggy(String texturePath, float x, float y, World world) {
         super(texturePath, x, y, world);  // Passing the parameters to the parent constructor
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 2f, height / 2f); // Adjusting size for the pig's shape
+
+        CircleShape shape = new CircleShape();
+        shape.setRadius(width / 2f); // Adjust the radius to the bird's size
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1.5f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.25f;  // Bounciness factor for pigs
+        fixtureDef.friction = 0.6f;
+        fixtureDef.restitution = 0.3f;  // Bounciness factor for pigs
 
         body.createFixture(fixtureDef); // Attach the fixture to the body
         shape.dispose();  // Clean up shape after use

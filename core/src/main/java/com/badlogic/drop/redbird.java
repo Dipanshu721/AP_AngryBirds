@@ -7,4 +7,8 @@ public class redbird extends Bird {
     public redbird(float x, float y, World world) {
         super("redbird.png", x, y, world);
     }
+
+    @Override
+    public void activateSpecialAbility() {
+    }
 }
