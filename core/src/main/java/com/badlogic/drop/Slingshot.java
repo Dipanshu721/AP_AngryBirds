@@ -1,6 +1,5 @@
 package com.badlogic.drop;
 
-
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,14 +9,12 @@ public class Slingshot extends Actor {
     private Bird bird;
     private final Vector2 initialPosition;
     private final Vector2 currentPosition = new Vector2();
-    private final GameScreen gameScreen;
     private boolean isDragging = false;
     private int currentBirdIndex = 0;
 
-    public Slingshot(Bird bird, GameScreen gameScreen) {
+    public Slingshot(Bird bird) {
         this.bird = bird;
         this.initialPosition = bird.getBody().getPosition().cpy();
-        this.gameScreen = gameScreen;
 
         setPosition(initialPosition.x-10, initialPosition.y-10);
         setSize(20,20);
@@ -42,7 +39,6 @@ public class Slingshot extends Actor {
                     }
                 return false;
             }
-
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {

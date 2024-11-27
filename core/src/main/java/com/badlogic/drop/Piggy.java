@@ -1,6 +1,5 @@
 package com.badlogic.drop;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -11,9 +10,11 @@ public abstract class Piggy extends GameObject {
     protected float y;  // Y position of the object
     protected int height= 10;
     protected float width = 10;
+    private int health =100;
 
     public Piggy(String texturePath, float x, float y, World world) {
         super(texturePath, x, y, world);  // Passing the parameters to the parent constructor
+        body.setUserData(this);
 
         CircleShape shape = new CircleShape();
         shape.setRadius(width / 2f); // Adjust the radius to the bird's size
@@ -46,8 +47,23 @@ public abstract class Piggy extends GameObject {
             false, false);
     }
 
+    public void reduceHealth(int damage) {
+        health -= damage;
+        if (health <= 0) {
+            CollisionHandler.queueForDestruction(body);
+        }
+    }
+
+    public boolean isDestroyed() {
+        return health <= 0; // Adjust based on how destruction is tracked
+    }
+
+
     @Override
     public void dispose() {
         super.dispose();  // Call parent's dispose
+        if (texture != null) {
+            texture.dispose();
+        }
     }
 }

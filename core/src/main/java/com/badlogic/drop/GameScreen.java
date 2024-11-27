@@ -1,4 +1,3 @@
-
 package com.badlogic.drop;
 
 import com.badlogic.gdx.Gdx;
@@ -24,6 +23,7 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer debugRenderer;
     private Stage stage;
     private int currentBirdIndex = 0;
+    private CollisionHandler collisionHandler;
 
     // Textures for UI and game objects
     private Texture backgroundTexture;
@@ -41,13 +41,10 @@ public class GameScreen implements Screen {
     private Texture steelStructureTexture;
     private Texture SlingshotTexture;
 
-
     // Birds
     private List<Bird> birds;
-
     // Pigs
     private List<Piggy> piggies;
-
     // Structures
     private List<Structure> structures;
 
@@ -89,6 +86,8 @@ public class GameScreen implements Screen {
         debugRenderer = new Box2DDebugRenderer();
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
+        collisionHandler = new CollisionHandler();
+        world.setContactListener(collisionHandler);
 
         // Initialize button areas
         float radius = 80;
@@ -107,7 +106,7 @@ public class GameScreen implements Screen {
         for (Bird bird : birds) {
             if (!bird.isLaunched()) {
                 bird.setPosition(50, 40);
-                Slingshot slingshot = new Slingshot(bird, this);
+                Slingshot slingshot = new Slingshot(bird);
                 stage.addActor(slingshot);// Add the slingshot for each bird
                 break;
             }
@@ -158,6 +157,7 @@ public class GameScreen implements Screen {
         groundShape.dispose();
     }
 
+
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
@@ -169,11 +169,12 @@ public class GameScreen implements Screen {
         viewport.apply();
         game.getbatch().setProjectionMatrix(camera.combined);
         world.step(1 / 60f, 6, 2);
+        collisionHandler.processQueuedDestruction(world);
+
         game.getbatch().begin();
 
         // Draw background
         game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-
         // Draw buttons
         game.getbatch().draw(pauseTexture, 0, 125, 16, 16);
         game.getbatch().draw(retryTexture, 18, 125, 16, 16);
@@ -184,12 +185,10 @@ public class GameScreen implements Screen {
         for (Bird bird : birds) {
             bird.render(game.getbatch());
         }
-
         // Render pigs
         for (Piggy piggy : piggies) {
             piggy.render(game.getbatch());
         }
-
         // Render structures
         for (Structure structure : structures) {
             structure.render(game.getbatch());
@@ -198,10 +197,8 @@ public class GameScreen implements Screen {
         game.getbatch().end();
         stage.act(delta);
         stage.draw();
-
         handleInput();
-        // Render physics bodies
-        debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined); // Render physics bodies
     }
     private void handleInput() {
         // Handle touch input
@@ -238,7 +235,7 @@ public class GameScreen implements Screen {
         if (currentBirdIndex < birds.size()) {
             Bird nextBird = birds.get(currentBirdIndex);
             nextBird.setPosition(50, 40);
-            Slingshot slingshot = new Slingshot(nextBird, this);  // Pass the GameScreen reference
+            Slingshot slingshot = new Slingshot(nextBird);  // Pass the GameScreen reference
             stage.addActor(slingshot);  // Add the slingshot for the next bird
         }
     }

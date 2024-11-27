@@ -1,6 +1,5 @@
 package com.badlogic.drop;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -9,12 +8,15 @@ public abstract class Structure extends GameObject {
 
     private float width;
     private float height;
+    private int health =150;
+//    private boolean destroyed;
 
     public Structure(String texturePath, float x, float y, float width, float height, World world) {
         super(texturePath, x, y, world);
 
         this.width = width; // Initialize width and height
         this.height = height;
+        body.setUserData(this);
 
         // Define the body
         BodyDef bodyDef = new BodyDef();
@@ -44,6 +46,18 @@ public abstract class Structure extends GameObject {
         return body.getPosition().y;
     }
 
+    public void reduceHealth(int damage) {
+        health -= damage;
+        if (health <= 0) {
+//            destroyed = true;
+            CollisionHandler.queueForDestruction(body);
+        }
+    }
+    public boolean isDestroyed() {
+        return health <= 0; // Adjust based on how destruction is tracked
+    }
+
+
     public void render(SpriteBatch spriteBatch) {
         Vector2 position = body.getPosition();
         float renderX = position.x - (width / 2f);  // Use actual width and height
@@ -67,5 +81,8 @@ public abstract class Structure extends GameObject {
     @Override
     public void dispose() {
         super.dispose(); // Dispose of texture
+        if (texture != null) {
+            texture.dispose();
+        }
     }
 }

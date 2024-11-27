@@ -19,6 +19,7 @@ public abstract class Bird extends GameObject {
         bodyDef.position.set(x, y);
         this.body = world.createBody(bodyDef);
         this.world = world;
+        body.setUserData(this);
 
         CircleShape shape = new CircleShape();
         shape.setRadius(width / 2f); // Adjust the radius to the bird's size
