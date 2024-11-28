@@ -50,7 +50,7 @@ public class StartScreen implements Screen {
             viewport.unproject(touchPos);
 
             if (touchPos.x >= 250 && touchPos.x <= 850 && touchPos.y >= 550 && touchPos.y <= 850) {
-                game.setScreen(new GameScreen2(game));
+                game.setScreen(new LevelScreen(game));
             }
         }
        if (Gdx.input.justTouched()){ // savedgame
@@ -58,7 +58,7 @@ public class StartScreen implements Screen {
             viewport.unproject(touchPos);
 
             if (touchPos.x >= 1050 && touchPos.x <= 1650 && touchPos.y >= 550 && touchPos.y <=  850) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new LevelScreen(game));
             }
         }
 

@@ -8,14 +8,14 @@ public abstract class Structure extends GameObject {
 
     private float width;
     private float height;
-    private int health =150;
-//    private boolean destroyed;
+    protected int health;
 
-    public Structure(String texturePath, float x, float y, float width, float height, World world) {
+    public Structure(String texturePath, float x, float y, float width, float height, World world, int hardcoded) {
         super(texturePath, x, y, world);
 
         this.width = width; // Initialize width and height
         this.height = height;
+        this.health = hardcoded;
         body.setUserData(this);
 
         // Define the body
@@ -24,7 +24,6 @@ public abstract class Structure extends GameObject {
         bodyDef.position.set(x, y);
         this.body = world.createBody(bodyDef);
 
-
         // Define the shape and attach it to the body
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width / 2f, height / 2f); // Box dimensions in Box2D units
@@ -32,7 +31,7 @@ public abstract class Structure extends GameObject {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 2.2f;
-        fixtureDef.friction = 0.8f;
+        fixtureDef.friction = 0.9f;
         fixtureDef.restitution = 0.15f;
 
         body.createFixture(fixtureDef);
@@ -51,12 +50,12 @@ public abstract class Structure extends GameObject {
         if (health <= 0) {
 //            destroyed = true;
             CollisionHandler.queueForDestruction(body);
+//            damageaboveBlock();
         }
     }
     public boolean isDestroyed() {
         return health <= 0; // Adjust based on how destruction is tracked
     }
-
 
     public void render(SpriteBatch spriteBatch) {
         Vector2 position = body.getPosition();
@@ -69,11 +68,9 @@ public abstract class Structure extends GameObject {
             false, false);
     }
 
-
     public float getWidth() {
         return width;
     }
-
     public float getHeight() {
         return height;
     }

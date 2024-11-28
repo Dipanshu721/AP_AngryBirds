@@ -7,8 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -16,16 +18,23 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameScreen2 implements Screen {
+public class GameScreen2 implements Screen, BirdLauncher {
     private final Main game;
     private World world;
     private Box2DDebugRenderer debugRenderer;
+    private Stage stage;
+    private CollisionHandler collisionHandler;
 
     // Textures for UI and game objects
     private Texture backgroundTexture;
     private Texture pauseTexture;
     private Texture retryTexture;
     private Texture saveTexture;
+    private Texture nextButtonTexture;
+    private Rectangle nextButtonRect;
+
+    private int birdsRemaining;
+    private static int pigsRemaining;
 
     private Texture redBirdTexture;
     private Texture blackBirdTexture;
@@ -35,13 +44,12 @@ public class GameScreen2 implements Screen {
     private Texture woodStructureTexture;
     private Texture iceStructureTexture;
     private Texture steelStructureTexture;
+    private Texture SlingshotTexture;
 
     // Birds
     private List<Bird> birds;
-
     // Pigs
     private List<Piggy> piggies;
-
     // Structures
     private List<Structure> structures;
 
@@ -60,7 +68,7 @@ public class GameScreen2 implements Screen {
     }
 
     public void create() {
-        // Load textures
+        // Load texture
         backgroundTexture = new Texture(Gdx.files.internal("gamescreen.jpg"));
         pauseTexture = new Texture(Gdx.files.internal("pausebutton.png"));
         retryTexture = new Texture(Gdx.files.internal("retry.png"));
@@ -73,74 +81,91 @@ public class GameScreen2 implements Screen {
         woodStructureTexture = new Texture(Gdx.files.internal("wood.png"));
         iceStructureTexture = new Texture(Gdx.files.internal("glass.png"));
         steelStructureTexture = new Texture(Gdx.files.internal("stone.png"));
+        SlingshotTexture = new Texture(Gdx.files.internal("Slingshot.png"));
+
 
         // Setup camera and viewport
         camera = new OrthographicCamera();
-        viewport = new FitViewport(2560, 1440, camera);
+        viewport = new FitViewport(256, 144, camera);
         world = new World(new Vector2(0, -9.8f), true);
         debugRenderer = new Box2DDebugRenderer();
+        stage = new Stage(viewport);
+        Gdx.input.setInputProcessor(stage);
+        collisionHandler = new CollisionHandler();
+        world.setContactListener(collisionHandler);
 
         // Initialize button areas
-        float radius = 80;
-        pauseCircle = new Circle(80, 1360, radius);
-        retryCircle = new Circle(260, 1360, radius);
-        saveCircle = new Circle(520, 1370, radius);
+        float radius = 8;
+        pauseCircle  = new Circle(10,  135, radius);
+        retryCircle  = new Circle(28, 135, radius);
+        saveCircle   = new Circle(44, 135, radius);
+        nextButtonTexture = new Texture("next_button.png");
+        nextButtonRect = new Rectangle(120, 20, 13, 5); // Adjust position and size
 
         // Initialize birds
+        birds = new ArrayList<>();
         assembleBirds();
-
         // Initialize pigs
+        piggies = new ArrayList<>();
         assemblePigs();
-
         // Initialize structures
         assembleStructures();
 
-        // create ground
+        birdsRemaining = birds.size();
+        pigsRemaining = piggies.size();
+
+        for (Bird bird : birds) {
+            if (!bird.isLaunched()) {
+                bird.setPosition(50, 40);
+                Slingshot slingshot = new Slingshot(bird);
+                stage.addActor(slingshot);// Add the slingshot for each bird
+                break;
+            }
+        }
         createGround();
     }
 
     private void assembleBirds() {
-        birds = new ArrayList<>();
-        birds.add(new redbird(100, 555, world));
-        birds.add(new blackbird(200, 205, world));
-        birds.add(new yellowbird(300, 205, world));
+        birds.add(new yellowbird(35, 25, world));
+        birds.add(new blackbird(22,  25, world));
+        birds.add(new redbird(8,     25, world));
     }
-
     private void assemblePigs() {
         piggies = new ArrayList<>();
-        piggies.add(new normalPiggy(1930, 200, world));
-        piggies.add(new normalPiggy(1930, 400, world));
+        piggies.add(new oldPiggy(195, 65, world));
+        piggies.add(new normalPiggy(182, 29, world));
+        piggies.add(new normalPiggy(208, 29, world));
     }
-
     private void assembleStructures() {
         structures = new ArrayList<>();
-        // Adding stone structures
-        structures.add(new SteelStructure(1800, 255, 45.5f, 150f, world));
-        structures.add(new SteelStructure(2050, 255, 45.5f, 150f, world));
-        structures.add(new SteelStructure(1925, 342, 300f, 45.5f, world));
+        structures.add(new SteelStructure(170, 29, 6, 30, world));
+        structures.add(new SteelStructure(195, 29, 6, 30, world));
+        structures.add(new SteelStructure(220, 29, 6, 30, world));
 
-        // Adding wood structures
-        structures.add(new WoodStructure(1800, 500, 45.5f, 150f, world));
-        structures.add(new WoodStructure(2050, 500, 45.5f, 150f, world));
-        structures.add(new WoodStructure(1925, 555, 300f, 45.5f, world));
+        structures.add(new WoodStructure(195, 60, 60, 4, world));
+
+        structures.add(new SteelStructure(182, 65, 6, 30, world));
+        structures.add(new SteelStructure(208, 65, 6, 30, world));
+
+        structures.add(new WoodStructure(195, 90, 30, 4, world));
+
+        structures.add(new SteelStructure(195, 95, 6, 30, world));
     }
-
     private void createGround() {
         BodyDef groundDef = new BodyDef();
         groundDef.type = BodyDef.BodyType.StaticBody;
-        groundDef.position.set(1280, 200); // Center horizontally, small height at bottom
+        groundDef.position.set(128, 20); // Center horizontally, small height at bottom
 
         Body groundBody = world.createBody(groundDef);
 
         PolygonShape groundShape = new PolygonShape();
-        groundShape.setAsBox(1280, 0); // Width = 2560, Height = 2 (half-dimensions)
+        groundShape.setAsBox(128, 0); // Width = 2560, Height = 2 (half-dimensions)
 
         FixtureDef groundFixture = new FixtureDef();
         groundFixture.shape = groundShape;
         groundBody.createFixture(groundFixture);
         groundShape.dispose();
     }
-
 
     @Override
     public void resize(int width, int height) {
@@ -153,38 +178,42 @@ public class GameScreen2 implements Screen {
         viewport.apply();
         game.getbatch().setProjectionMatrix(camera.combined);
         world.step(1 / 60f, 6, 2);
+        collisionHandler.processQueuedDestruction(world);
+
+
         game.getbatch().begin();
-
         // Draw background
-//        game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-
+        game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         // Draw buttons
-        game.getbatch().draw(pauseTexture, 0, 1250, 160, 160);
-        game.getbatch().draw(retryTexture, 180, 1250, 160, 160);
-        game.getbatch().draw(saveTexture, 340, 1255, 247, 143);
+        game.getbatch().draw(pauseTexture, 0, 125, 16, 16);
+        game.getbatch().draw(retryTexture, 18, 125, 16, 16);
+        game.getbatch().draw(saveTexture, 34, 125f, 24.7f, 14.3f);
+        game.getbatch().draw(SlingshotTexture, 40, 18f, 25, 25);
+
+        if (birdsRemaining == 0 || pigsRemaining == 0) {
+            game.getbatch().draw(nextButtonTexture, 120, 20, 13, 5);
+        }
 
         // Render birds
         for (Bird bird : birds) {
             bird.render(game.getbatch());
         }
-
-// Render pigs
+        // Render pigs
         for (Piggy piggy : piggies) {
             piggy.render(game.getbatch());
         }
-
-// Render structures
+        // Render structures
         for (Structure structure : structures) {
             structure.render(game.getbatch());
         }
 
         game.getbatch().end();
+        stage.act(delta);
+        stage.draw();
 
         handleInput();
-        // Render physics bodies
-        debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined); // Render physics bodies
     }
-
 
     private void handleInput() {
         // Handle touch input
@@ -196,19 +225,45 @@ public class GameScreen2 implements Screen {
                 game.setScreen(new PausedScreen(game));
             }
             if (retryCircle.contains(touchPos.x, touchPos.y)) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameScreen2(game));
             }
             if (saveCircle.contains(touchPos.x, touchPos.y)) {
-                //need to  Handle save logic here
                 Gdx.app.log("Save", "Game saved!");
             }
+            if (birdsRemaining == 0 || pigsRemaining == 0) {
+                if (nextButtonRect.contains(touchPos.x, touchPos.y)) {
+                    if (pigsRemaining == 0) {
+                        game.setScreen(new WinScreen(game));
+                    } else if (birdsRemaining == 0) {
+                        game.setScreen(new LostScreen(game));
+                    }
+                }
+            }
+            // Win screen shortcut for testing
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                game.setScreen(new WinScreen(game));
+            }
         }
-
-        // Win screen shortcut for testing
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            game.setScreen(new WinScreen(game));
+        if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {  // Detect `N` key press
+            launchNextBird();
         }
     }
+    @Override
+    public void launchNextBird() {
+
+        if (birdsRemaining > 0) {
+            Bird nextBird = birds.get(birds.size() - birdsRemaining);
+            nextBird.setPosition(50, 40);
+            Slingshot slingshot = new Slingshot(nextBird);
+            stage.addActor(slingshot);
+            birdsRemaining--;
+        }
+    }
+
+    public static void pigDestroyed() {
+        pigsRemaining--;
+    }
+
 
     @Override
     public void dispose() {
@@ -216,6 +271,7 @@ public class GameScreen2 implements Screen {
         pauseTexture.dispose();
         retryTexture.dispose();
         saveTexture.dispose();
+        nextButtonTexture.dispose();
 
         for (Bird bird : birds) {
             bird.dispose();
@@ -232,6 +288,7 @@ public class GameScreen2 implements Screen {
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override

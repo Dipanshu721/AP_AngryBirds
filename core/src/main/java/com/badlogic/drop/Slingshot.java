@@ -10,7 +10,6 @@ public class Slingshot extends Actor {
     private final Vector2 initialPosition;
     private final Vector2 currentPosition = new Vector2();
     private boolean isDragging = false;
-    private int currentBirdIndex = 0;
 
     public Slingshot(Bird bird) {
         this.bird = bird;
@@ -53,7 +52,7 @@ public class Slingshot extends Actor {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (isDragging) {
                     isDragging = false;
-                    float velocity = (float) (initialPosition.dst(currentPosition));
+                    float velocity = (initialPosition.dst(currentPosition));
                     float angle = initialPosition.sub(currentPosition).angleRad();
                     Slingshot.this.bird.launch(velocity, angle);
                 }

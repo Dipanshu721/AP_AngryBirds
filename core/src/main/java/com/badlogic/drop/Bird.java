@@ -24,12 +24,11 @@ public abstract class Bird extends GameObject {
         CircleShape shape = new CircleShape();
         shape.setRadius(width / 2f); // Adjust the radius to the bird's size
 
-
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.6f;
-        fixtureDef.friction = 0.6f;
-        fixtureDef.restitution = 0.5f;
+        fixtureDef.density = 1.8f;
+        fixtureDef.friction = 1f;
+        fixtureDef.restitution = 0.2f;
 
         body.createFixture(fixtureDef);
         shape.dispose();

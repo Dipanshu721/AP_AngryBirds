@@ -7,5 +7,6 @@ public class normalPiggy extends Piggy {
     public normalPiggy(float x, float y, World world) {
         // Call the superclass constructor with 4 arguments
         super("normalpiggy.png", x, y, world);
+        this.health = 80;
     }
 }

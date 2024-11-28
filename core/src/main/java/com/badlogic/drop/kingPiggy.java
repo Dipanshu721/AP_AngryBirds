@@ -6,5 +6,6 @@ public class kingPiggy extends Piggy {
 
     public kingPiggy(float x, float y, World world) {
         super("kingpiggy.png", x, y, world);
+        this.health = 100;
     }
 }

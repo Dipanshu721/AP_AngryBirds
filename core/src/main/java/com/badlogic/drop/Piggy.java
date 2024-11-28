@@ -10,7 +10,7 @@ public abstract class Piggy extends GameObject {
     protected float y;  // Y position of the object
     protected int height= 10;
     protected float width = 10;
-    private int health =100;
+    int health;
 
     public Piggy(String texturePath, float x, float y, World world) {
         super(texturePath, x, y, world);  // Passing the parameters to the parent constructor
@@ -21,9 +21,9 @@ public abstract class Piggy extends GameObject {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.5f;
-        fixtureDef.friction = 0.6f;
-        fixtureDef.restitution = 0.3f;  // Bounciness factor for pigs
+        fixtureDef.density = 1.6f;
+        fixtureDef.friction = 0.8f;
+        fixtureDef.restitution = 0.15f;  // Bounciness factor
 
         body.createFixture(fixtureDef); // Attach the fixture to the body
         shape.dispose();  // Clean up shape after use

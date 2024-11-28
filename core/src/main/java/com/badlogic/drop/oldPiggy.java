@@ -6,5 +6,6 @@ public class oldPiggy extends Piggy {
 
     public oldPiggy(float x, float y, World world) {
         super("normalpiggy.png", x, y, world);
+        this.health = 60;
     }
 }

@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameScreen implements Screen,BirdLauncher {
+public class GameScreen3 implements Screen,BirdLauncher {
     private final Main game;
     private World world;
     private Box2DDebugRenderer debugRenderer;
@@ -57,11 +57,10 @@ public class GameScreen implements Screen,BirdLauncher {
     private OrthographicCamera camera;
     private Viewport viewport;
 
-    public GameScreen(Main game) {
+    public GameScreen3(Main game) {
         this.game = game;
         create();
     }
-
 
     public void create() {
         // Load texture
@@ -78,6 +77,7 @@ public class GameScreen implements Screen,BirdLauncher {
         iceStructureTexture = new Texture(Gdx.files.internal("glass.png"));
         steelStructureTexture = new Texture(Gdx.files.internal("stone.png"));
         SlingshotTexture = new Texture(Gdx.files.internal("Slingshot.png"));
+
 
         // Setup camera and viewport
         camera = new OrthographicCamera();
@@ -121,17 +121,41 @@ public class GameScreen implements Screen,BirdLauncher {
     }
     private void assemblePigs() {
         piggies = new ArrayList<>();
-        piggies.add(new normalPiggy(195, 67, world));
-        piggies.add(new normalPiggy(195, 104, world));
+        piggies.add(new normalPiggy(194, 54, world));
+        piggies.add(new normalPiggy(218, 54, world));
+        piggies.add(new kingPiggy(218, 94, world));
+        piggies.add(new oldPiggy(218, 73, world));
     }
     private void assembleStructures() {
         structures = new ArrayList<>();
-        structures.add(new WoodStructure(180, 47, 4, 30, world));
-        structures.add(new WoodStructure(210, 47, 4, 30, world));
-        structures.add(new WoodStructure(195, 64.5f, 35, 4, world));
-        structures.add(new WoodStructure(180, 83, 4, 30, world));
-        structures.add(new WoodStructure(210, 83, 4, 30, world));
-        structures.add(new WoodStructure(195, 102, 35, 4, world));
+        structures.add(new IceStructure(160, 40, 4, 15, world));
+        structures.add(new IceStructure(180, 40, 4, 15, world));
+        structures.add(new IceStructure(206, 40, 4, 15, world));
+        structures.add(new IceStructure(208, 40, 4, 15, world));
+        structures.add(new IceStructure(230, 40, 4, 15, world));
+        structures.add(new IceStructure(184, 40, 4, 15, world));
+
+        structures.add(new IceStructure(170, 50, 25, 4, world));
+        structures.add(new IceStructure(194, 50, 25, 4, world));
+        structures.add(new IceStructure(218, 50, 25, 4, world));
+
+        structures.add(new IceStructure(184, 59, 4, 15, world));
+        structures.add(new IceStructure(206, 59, 4, 15, world));
+        structures.add(new IceStructure(208, 59, 4, 15, world));
+        structures.add(new IceStructure(230, 59, 4, 15, world));
+
+        structures.add(new IceStructure(195, 69, 25, 4, world));
+        structures.add(new IceStructure(218, 69, 25, 4, world));
+
+        structures.add(new IceStructure(208, 79, 4, 15, world));
+        structures.add(new IceStructure(230, 79, 4, 15, world));
+
+        structures.add(new IceStructure(218, 88, 25, 4, world));
+
+        structures.add(new IceStructure(208, 98, 4, 15, world));
+        structures.add(new IceStructure(230, 98, 4, 15, world));
+
+        structures.add(new IceStructure(218, 108, 25, 4, world));
 
         structures.add(new SteelStructure(170, 29, 25, 6, world));
         structures.add(new SteelStructure(195, 29, 25, 6, world));
@@ -198,7 +222,6 @@ public class GameScreen implements Screen,BirdLauncher {
         handleInput();
         debugRenderer.render(world, camera.combined); // Render physics bodies
 
-        // condition for win loose
         if (LevelComplete.checkWin(piggies)) {
             game.setScreen(new WinScreen(game));
         } else if (LevelComplete.checkLose(currentBirdIndex, birds.size())) {
@@ -215,7 +238,7 @@ public class GameScreen implements Screen,BirdLauncher {
                 game.setScreen(new PausedScreen(game));
             }
             if (retryCircle.contains(touchPos.x, touchPos.y)) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameScreen3(game));
             }
             if (saveCircle.contains(touchPos.x, touchPos.y)) {
                 Gdx.app.log("Save", "Game saved!");
@@ -225,14 +248,14 @@ public class GameScreen implements Screen,BirdLauncher {
                 game.setScreen(new WinScreen(game));
             }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.N)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {  // Detect `N` key press
             launchNextBird();
         }
     }
     @Override
     public void launchNextBird() {
         currentBirdIndex++;
-        if (currentBirdIndex < birds.size()-1) {
+        if (currentBirdIndex < birds.size()) {
             Bird nextBird = birds.get(currentBirdIndex);
             nextBird.setPosition(50, 40);
             Slingshot slingshot = new Slingshot(nextBird);

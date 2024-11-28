@@ -1,14 +1,12 @@
 package com.badlogic.drop;
 
 import com.badlogic.gdx.physics.box2d.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class CollisionHandler implements ContactListener {
 
     private static final List<Body> objectsToDestroy = new ArrayList<>();
-
     public static void queueForDestruction(Body body) {
         if (!objectsToDestroy.contains(body)) {
             objectsToDestroy.add(body);
@@ -28,7 +26,6 @@ public class CollisionHandler implements ContactListener {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
 
-        // Example handling logic
         if (fixtureA.getBody().getUserData() instanceof Bird) {
             handleCollision(fixtureA, fixtureB);
         } else if (fixtureB.getBody().getUserData() instanceof Bird) {
@@ -44,15 +41,16 @@ public class CollisionHandler implements ContactListener {
                 Piggy piggy = (Piggy) otherFixture.getBody().getUserData();
                 piggy.reduceHealth(100);
                 if (piggy.isDestroyed()) {
-                    queueForDestruction(otherFixture.getBody());// Use `otherFixture`
+                    queueForDestruction(otherFixture.getBody());
                     piggy.dispose();
+                    GameScreen2.pigDestroyed();
                 }
             } else if (otherFixture.getBody().getUserData() instanceof Structure) {
                 Structure structure = (Structure) otherFixture.getBody().getUserData();
                 structure.reduceHealth(80);
                 if (structure.isDestroyed()) {
-                    queueForDestruction(otherFixture.getBody());  // Use `otherFixture`
-                structure.dispose();
+                    queueForDestruction(otherFixture.getBody());
+                    structure.dispose();
                 }
             }
         }
