@@ -14,9 +14,10 @@ public class CollisionHandler implements ContactListener {
     }
     public void processQueuedDestruction(World world) {
         for (Body body : objectsToDestroy) {
-            if (body != null) {
-                world.destroyBody(body);
+            if (world.isLocked()){
+                continue;
             }
+            body.setActive(false);
         }
         objectsToDestroy.clear();
     }

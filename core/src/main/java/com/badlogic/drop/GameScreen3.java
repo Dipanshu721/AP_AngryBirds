@@ -220,7 +220,13 @@ public class GameScreen3 implements Screen,BirdLauncher {
         stage.draw();
 
         handleInput();
-        debugRenderer.render(world, camera.combined); // Render physics bodies
+//        debugRenderer.render(world, camera.combined); // Render physics bodies
+
+        if (LevelComplete.checkWin(piggies)) {
+            game.setScreen(new WinScreen(game));
+        } else if (LevelComplete.checkLose(currentBirdIndex, birds.size())) {
+            game.setScreen(new LostScreen(game));
+        }
 
         if (LevelComplete.checkWin(piggies)) {
             game.setScreen(new WinScreen(game));
@@ -233,12 +239,11 @@ public class GameScreen3 implements Screen,BirdLauncher {
         if (Gdx.input.isTouched()) {
             Vector2 touchPos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
-
             if (pauseCircle.contains(touchPos.x, touchPos.y)) {
-                game.setScreen(new PausedScreen(game));
+                game.setScreen(new PausedScreen(game, this)); // Pass 'this' as the current screen
             }
             if (retryCircle.contains(touchPos.x, touchPos.y)) {
-                game.setScreen(new GameScreen3(game));
+                game.setScreen(new GameScreen(game));
             }
             if (saveCircle.contains(touchPos.x, touchPos.y)) {
                 Gdx.app.log("Save", "Game saved!");
@@ -248,7 +253,7 @@ public class GameScreen3 implements Screen,BirdLauncher {
                 game.setScreen(new WinScreen(game));
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {  // Detect `N` key press
+        if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {  // Detect N key press
             launchNextBird();
         }
     }

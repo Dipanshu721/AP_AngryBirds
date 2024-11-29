@@ -18,7 +18,8 @@ public abstract class GameObject {
     }
 
     public void dispose() {
-        texture.dispose();  // Dispose of texture when no longer needed
+        texture.dispose();
+        // Dispose of texture when no longer needed
     }
 
     public Texture getTexture() {

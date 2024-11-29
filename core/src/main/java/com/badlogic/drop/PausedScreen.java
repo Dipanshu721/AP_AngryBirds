@@ -11,14 +11,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class PausedScreen implements Screen {
     private final Main game;
+    private final Screen previousScreen; // Reference to the calling screen
+
     private Texture backgroundTexture;
     private Texture ResumeTexture;
     private Texture ExitGameTexture;
 
     private Viewport viewport;
 
-    public PausedScreen(Main game) {
+    public PausedScreen(Main game, Screen previousScreen) {
         this.game = game;
+        this.previousScreen = previousScreen; // Store the calling screen
     }
 
     @Override
@@ -63,12 +66,12 @@ public class PausedScreen implements Screen {
 
             // Resume button
             if (touchPos.x >= 250 && touchPos.x <= 850 && touchPos.y >= 525 && touchPos.y <= 825) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(previousScreen); // Return to the calling screen
             }
 
             // Exit button
             if (touchPos.x >= 1050 && touchPos.x <= 1650 && touchPos.y >= 525 && touchPos.y <= 825) {
-                game.setScreen(new LostScreen(game));
+                game.setScreen(new LostScreen(game)); // Navigate to the LostScreen
             }
         }
     }

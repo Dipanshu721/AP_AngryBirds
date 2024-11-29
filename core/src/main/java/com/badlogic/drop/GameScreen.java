@@ -62,7 +62,6 @@ public class GameScreen implements Screen,BirdLauncher {
         create();
     }
 
-
     public void create() {
         // Load texture
         backgroundTexture = new Texture(Gdx.files.internal("gamescreen.jpg"));
@@ -78,6 +77,7 @@ public class GameScreen implements Screen,BirdLauncher {
         iceStructureTexture = new Texture(Gdx.files.internal("glass.png"));
         steelStructureTexture = new Texture(Gdx.files.internal("stone.png"));
         SlingshotTexture = new Texture(Gdx.files.internal("Slingshot.png"));
+
 
         // Setup camera and viewport
         camera = new OrthographicCamera();
@@ -119,27 +119,30 @@ public class GameScreen implements Screen,BirdLauncher {
         birds.add(new blackbird(22,  25, world));
         birds.add(new redbird(8,     25, world));
     }
+
     private void assemblePigs() {
         piggies = new ArrayList<>();
-        piggies.add(new normalPiggy(195, 67, world));
-        piggies.add(new normalPiggy(195, 104, world));
+        piggies.add(new normalPiggy(195, 45, world));
+//        piggies.add(new normalPiggy(195, 104, world));
     }
+
     private void assembleStructures() {
         structures = new ArrayList<>();
-        structures.add(new WoodStructure(180, 47, 4, 30, world));
-        structures.add(new WoodStructure(210, 47, 4, 30, world));
-        structures.add(new WoodStructure(195, 64.5f, 35, 4, world));
-        structures.add(new WoodStructure(180, 83, 4, 30, world));
-        structures.add(new WoodStructure(210, 83, 4, 30, world));
-        structures.add(new WoodStructure(195, 102, 35, 4, world));
+        structures.add(new WoodStructure(180, 29, 4, 20, world));
+        structures.add(new WoodStructure(210, 29, 4, 20, world));
+        structures.add(new WoodStructure(195, 40, 35, 4, world));
+//        structures.add(new WoodStructure(180, 83, 4, 30, world));
+//        structures.add(new WoodStructure(210, 83, 4, 30, world));
+//        structures.add(new WoodStructure(195, 102, 35, 4, world));
 
-        structures.add(new SteelStructure(170, 29, 25, 6, world));
-        structures.add(new SteelStructure(195, 29, 25, 6, world));
-        structures.add(new SteelStructure(220, 29, 25, 6, world));
-        structures.add(new SteelStructure(170, 23, 25, 6, world));
-        structures.add(new SteelStructure(195, 23, 25, 6, world));
-        structures.add(new SteelStructure(220, 23, 25, 6, world));
+//        structures.add(new SteelStructure(170, 29, 25, 6, world));
+//        structures.add(new SteelStructure(195, 29, 25, 6, world));
+//        structures.add(new SteelStructure(220, 29, 25, 6, world));
+//        structures.add(new SteelStructure(170, 23, 25, 6, world));
+//        structures.add(new SteelStructure(195, 23, 25, 6, world));
+//        structures.add(new SteelStructure(220, 23, 25, 6, world));
     }
+
     private void createGround() {
         BodyDef groundDef = new BodyDef();
         groundDef.type = BodyDef.BodyType.StaticBody;
@@ -196,9 +199,8 @@ public class GameScreen implements Screen,BirdLauncher {
         stage.draw();
 
         handleInput();
-        debugRenderer.render(world, camera.combined); // Render physics bodies
+//        debugRenderer.render(world, camera.combined); // Render physics bodies
 
-        // condition for win loose
         if (LevelComplete.checkWin(piggies)) {
             game.setScreen(new WinScreen(game));
         } else if (LevelComplete.checkLose(currentBirdIndex, birds.size())) {
@@ -210,9 +212,8 @@ public class GameScreen implements Screen,BirdLauncher {
         if (Gdx.input.isTouched()) {
             Vector2 touchPos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
-
             if (pauseCircle.contains(touchPos.x, touchPos.y)) {
-                game.setScreen(new PausedScreen(game));
+                game.setScreen(new PausedScreen(game, this)); // Pass 'this' as the current screen
             }
             if (retryCircle.contains(touchPos.x, touchPos.y)) {
                 game.setScreen(new GameScreen(game));
@@ -225,14 +226,14 @@ public class GameScreen implements Screen,BirdLauncher {
                 game.setScreen(new WinScreen(game));
             }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.N)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {  // Detect N key press
             launchNextBird();
         }
     }
     @Override
     public void launchNextBird() {
         currentBirdIndex++;
-        if (currentBirdIndex < birds.size()-1) {
+        if (currentBirdIndex < birds.size()) {
             Bird nextBird = birds.get(currentBirdIndex);
             nextBird.setPosition(50, 40);
             Slingshot slingshot = new Slingshot(nextBird);
