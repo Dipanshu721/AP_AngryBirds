@@ -116,10 +116,9 @@ public class GameScreen implements Screen,BirdLauncher {
 
     private void assembleBirds() {
         birds.add(new yellowbird(35, 25, world));
-        birds.add(new blackbird(22,  25, world));
-        birds.add(new redbird(8,     25, world));
+        birds.add(new redbird(22,  25, world));
+        birds.add(new blackbird(8,     25, world));
     }
-
     private void assemblePigs() {
         piggies = new ArrayList<>();
         piggies.add(new normalPiggy(195, 45, world));

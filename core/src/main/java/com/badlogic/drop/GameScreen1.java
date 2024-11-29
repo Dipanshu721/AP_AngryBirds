@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameScreen3 implements Screen,BirdLauncher {
+public class GameScreen1 implements Screen,BirdLauncher {
     private final Main game;
     private World world;
     private Box2DDebugRenderer debugRenderer;
@@ -57,7 +57,7 @@ public class GameScreen3 implements Screen,BirdLauncher {
     private OrthographicCamera camera;
     private Viewport viewport;
 
-    public GameScreen3(Main game) {
+    public GameScreen1(Main game) {
         this.game = game;
         create();
     }
@@ -115,55 +115,34 @@ public class GameScreen3 implements Screen,BirdLauncher {
     }
 
     private void assembleBirds() {
-        birds.add(new yellowbird(35, 25, world));
-        birds.add(new blackbird(22,  25, world));
-        birds.add(new redbird(8,     25, world));
+        birds.add(new redbird(22,  25, world));
+        birds.add(new blackbird(8,     25, world));
     }
+
     private void assemblePigs() {
         piggies = new ArrayList<>();
-        piggies.add(new normalPiggy(194, 54, world));
-        piggies.add(new normalPiggy(218, 54, world));
-        piggies.add(new kingPiggy(218, 94, world));
-        piggies.add(new oldPiggy(218, 73, world));
+        piggies.add(new normalPiggy(215, 24, world));
+//        piggies.add(new normalPiggy(195, 104, world));
     }
+
     private void assembleStructures() {
         structures = new ArrayList<>();
-        structures.add(new IceStructure(160, 40, 4, 15, world));
-        structures.add(new IceStructure(180, 40, 4, 15, world));
-        structures.add(new IceStructure(206, 40, 4, 15, world));
-        structures.add(new IceStructure(208, 40, 4, 15, world));
-        structures.add(new IceStructure(230, 40, 4, 15, world));
-        structures.add(new IceStructure(184, 40, 4, 15, world));
+//        structures.add(new WoodStructure(180, 29, 4, 20, world));
+//        structures.add(new WoodStructure(210, 29, 4, 20, world));
+        structures.add(new WoodStructure(210, 20, 35, 4, world));
+        structures.add(new WoodStructure(250, 20, 35, 4, world));
+//        structures.add(new WoodStructure(180, 83, 4, 30, world));
+//        structures.add(new WoodStructure(210, 83, 4, 30, world));
+//        structures.add(new WoodStructure(195, 102, 35, 4, world));
 
-        structures.add(new IceStructure(170, 50, 25, 4, world));
-        structures.add(new IceStructure(194, 50, 25, 4, world));
-        structures.add(new IceStructure(218, 50, 25, 4, world));
-
-        structures.add(new IceStructure(184, 59, 4, 15, world));
-        structures.add(new IceStructure(206, 59, 4, 15, world));
-        structures.add(new IceStructure(208, 59, 4, 15, world));
-        structures.add(new IceStructure(230, 59, 4, 15, world));
-
-        structures.add(new IceStructure(195, 69, 25, 4, world));
-        structures.add(new IceStructure(218, 69, 25, 4, world));
-
-        structures.add(new IceStructure(208, 79, 4, 15, world));
-        structures.add(new IceStructure(230, 79, 4, 15, world));
-
-        structures.add(new IceStructure(218, 88, 25, 4, world));
-
-        structures.add(new IceStructure(208, 98, 4, 15, world));
-        structures.add(new IceStructure(230, 98, 4, 15, world));
-
-        structures.add(new IceStructure(218, 108, 25, 4, world));
-
-        structures.add(new SteelStructure(170, 29, 25, 6, world));
-        structures.add(new SteelStructure(195, 29, 25, 6, world));
-        structures.add(new SteelStructure(220, 29, 25, 6, world));
-        structures.add(new SteelStructure(170, 23, 25, 6, world));
-        structures.add(new SteelStructure(195, 23, 25, 6, world));
-        structures.add(new SteelStructure(220, 23, 25, 6, world));
+//        structures.add(new SteelStructure(170, 29, 25, 6, world));
+//        structures.add(new SteelStructure(195, 29, 25, 6, world));
+//        structures.add(new SteelStructure(220, 29, 25, 6, world));
+//        structures.add(new SteelStructure(170, 23, 25, 6, world));
+//        structures.add(new SteelStructure(195, 23, 25, 6, world));
+//        structures.add(new SteelStructure(220, 23, 25, 6, world));
     }
+
     private void createGround() {
         BodyDef groundDef = new BodyDef();
         groundDef.type = BodyDef.BodyType.StaticBody;
@@ -220,13 +199,7 @@ public class GameScreen3 implements Screen,BirdLauncher {
         stage.draw();
 
         handleInput();
-//        debugRenderer.render(world, camera.combined); // Render physics bodies
-
-        if (LevelComplete.checkWin(piggies)) {
-            game.setScreen(new WinScreen(game));
-        } else if (LevelComplete.checkLose(currentBirdIndex, birds.size())) {
-            game.setScreen(new LostScreen(game));
-        }
+        debugRenderer.render(world, camera.combined); // Render physics bodies
 
         if (LevelComplete.checkWin(piggies)) {
             game.setScreen(new WinScreen(game));
@@ -243,7 +216,7 @@ public class GameScreen3 implements Screen,BirdLauncher {
                 game.setScreen(new PausedScreen(game, this)); // Pass 'this' as the current screen
             }
             if (retryCircle.contains(touchPos.x, touchPos.y)) {
-                game.setScreen(new GameScreen3(game));
+                game.setScreen(new GameScreen(game));
             }
             if (saveCircle.contains(touchPos.x, touchPos.y)) {
                 Gdx.app.log("Save", "Game saved!");
@@ -257,6 +230,7 @@ public class GameScreen3 implements Screen,BirdLauncher {
             launchNextBird();
         }
     }
+
     @Override
     public void launchNextBird() {
         currentBirdIndex++;

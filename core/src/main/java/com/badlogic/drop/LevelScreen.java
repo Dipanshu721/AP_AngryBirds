@@ -11,6 +11,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 public class LevelScreen implements Screen {
     private final Main game;
     private Texture backgroundTexture;
@@ -24,8 +28,11 @@ public class LevelScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
 
-    public LevelScreen(Main game) {
+    private boolean isSavedGame;
+
+    public LevelScreen(Main game, boolean isSavedGame) {
         this.game = game;
+        this.isSavedGame = isSavedGame; // Set the flag based on the chosen option
     }
 
     @Override
@@ -69,24 +76,38 @@ public class LevelScreen implements Screen {
         play3Sprite.draw(game.getbatch());
         game.getbatch().end();
 
-        if (Gdx.input.isTouched()){
+        if (Gdx.input.isTouched()) {
             Vector2 touchPos = new Vector2();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 213 && touchPos.x <= 663 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
-                game.setScreen(new GameScreen(game));
+            if (touchPos.x >= 213 && touchPos.x <= 663 && touchPos.y >= 550 && touchPos.y <= 800) {
+                // If it's a saved game, load the saved state of this level, else start a new game
+                if (isSavedGame) {
+                    game.setScreen(new GameScreen1(game) );  // Load saved state for level 1
+                } else {
+                    game.setScreen(new GameScreen(game));  // Start new game for level 1
+                }
             }
 
-            if (touchPos.x >= 751 && touchPos.x <= 1201 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
-                game.setScreen(new GameScreen2(game));
+            if (touchPos.x >= 751 && touchPos.x <= 1201 && touchPos.y >= 550 && touchPos.y <= 800) {
+                if (isSavedGame) {
+                    game.setScreen(new GameScreen2(game)); // Load saved state for level 2
+                } else {
+                    game.setScreen(new GameScreen2(game));  // Start new game for level 2
+                }
             }
 
-            if (touchPos.x >= 1283 && touchPos.x <= 1733 && touchPos.y >= 550 && touchPos.y <= 800) {// enter level 1 game
-                game.setScreen(new GameScreen3(game));
+            if (touchPos.x >= 1283 && touchPos.x <= 1733 && touchPos.y >= 550 && touchPos.y <= 800) {
+                if (isSavedGame) {
+                    game.setScreen(new GameScreen3(game));  // Load saved state for level 3
+                } else {
+                    game.setScreen(new GameScreen3(game));  // Start new game for level 3
+                }
             }
         }
     }
+
 
     @Override
     public void hide() {

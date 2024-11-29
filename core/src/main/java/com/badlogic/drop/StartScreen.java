@@ -50,15 +50,15 @@ public class StartScreen implements Screen {
             viewport.unproject(touchPos);
 
             if (touchPos.x >= 250 && touchPos.x <= 850 && touchPos.y >= 550 && touchPos.y <= 850) {
-                game.setScreen(new LevelScreen(game));
+                game.setScreen(new LevelScreen(game,false));
             }
         }
-       if (Gdx.input.justTouched()){ // savedgame
+        if (Gdx.input.justTouched()){ // savedgame
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
             if (touchPos.x >= 1050 && touchPos.x <= 1650 && touchPos.y >= 550 && touchPos.y <=  850) {
-                game.setScreen(new LevelScreen(game));
+                game.setScreen(new LevelScreen(game,true));
             }
         }
 
