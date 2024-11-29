@@ -1,32 +1,44 @@
 package com.badlogic.drop;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 public class blackbird extends Bird {
-
+    private static final float EXPLOSION_RADIUS = 5f; // Define radius for the explosion effect
+    private static final float EXPLOSION_FORCE = 100f;
+    private boolean abilityUsed;
     public blackbird(float x, float y, World world) {
         super("blackbird.png", x, y, world);
     }
 
-    public void activateSpecialAbility() {
-        if (isLaunched()) {
-            // Simulate bomb effect
-            Vector2 position = body.getPosition();
-            float blastRadius = 10f; // Adjust radius as needed
-            float blastFactor = 5f; // Adjust impact strength
-            Array<Body> bodies = new Array<>();
-            world.getBodies(bodies); // Fetch all bodies in the world
-
-            for (Body body : bodies) {
-                if (body != this.body && position.dst(body.getPosition()) <= blastRadius) {
-                    Vector2 force = body.getPosition().sub(position).nor().scl(blastFactor);
-                    body.applyLinearImpulse(force, body.getWorldCenter(), true);
-                }
-            }
-            body.setActive(false); // Destroy the bird after bomb
+    public void handleInput() {
+        if (isLaunched() && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            activateSpecialAbility();
         }
+    }
+
+    public void activateSpecialAbility() {
+        if (!abilityUsed && isLaunched()) {
+            // Trigger explosion force
+            applyExplosionForce();
+            abilityUsed = true; // Ensure ability is only used once
+        }
+    }
+
+    private void applyExplosionForce() {
+        // Check nearby objects in the world (use Box2D query)
+        world.QueryAABB((fixture) -> {
+                if (fixture.getBody() != this.body) {
+                    Vector2 distance = fixture.getBody().getPosition().cpy().sub(this.body.getPosition());
+                    if (distance.len() <= EXPLOSION_RADIUS) {
+                        Vector2 force = distance.nor().scl(EXPLOSION_FORCE);
+                        fixture.getBody().applyForceToCenter(force, true);
+                    }
+                }
+                return true;
+            }, body.getPosition().x - EXPLOSION_RADIUS, body.getPosition().y - EXPLOSION_RADIUS,
+            body.getPosition().x + EXPLOSION_RADIUS, body.getPosition().y + EXPLOSION_RADIUS);
     }
 }

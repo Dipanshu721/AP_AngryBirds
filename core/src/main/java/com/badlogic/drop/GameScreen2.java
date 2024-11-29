@@ -26,24 +26,12 @@ public class GameScreen2 implements Screen, BirdLauncher {
     private CollisionHandler collisionHandler;
 
     // Textures for UI and game objects
-    private Texture backgroundTexture;
-    private Texture pauseTexture;
-    private Texture retryTexture;
-    private Texture saveTexture;
-    private Texture nextButtonTexture;
+    private Texture backgroundTexture, pauseTexture, retryTexture, saveTexture, nextButtonTexture;
     private Rectangle nextButtonRect;
-
     private int birdsRemaining;
     private static int pigsRemaining;
+    private Bird currentBird;
 
-    private Texture redBirdTexture;
-    private Texture blackBirdTexture;
-    private Texture yellowBirdTexture;
-    private Texture kingPiggyTexture;
-    private Texture normalPiggyTexture;
-    private Texture woodStructureTexture;
-    private Texture iceStructureTexture;
-    private Texture steelStructureTexture;
     private Texture SlingshotTexture;
 
     // Birds
@@ -54,9 +42,7 @@ public class GameScreen2 implements Screen, BirdLauncher {
     private List<Structure> structures;
 
     // Utility objects for buttons
-    private Circle pauseCircle;
-    private Circle retryCircle;
-    private Circle saveCircle;
+    private Circle pauseCircle, retryCircle, saveCircle;
 
     // Camera and Viewport
     private OrthographicCamera camera;
@@ -73,16 +59,15 @@ public class GameScreen2 implements Screen, BirdLauncher {
         pauseTexture = new Texture(Gdx.files.internal("pausebutton.png"));
         retryTexture = new Texture(Gdx.files.internal("retry.png"));
         saveTexture = new Texture(Gdx.files.internal("save.png"));
-        redBirdTexture = new Texture(Gdx.files.internal("redbird.png"));
-        blackBirdTexture = new Texture(Gdx.files.internal("blackbird.png"));
-        yellowBirdTexture = new Texture(Gdx.files.internal("yellowbird.png"));
-        kingPiggyTexture = new Texture(Gdx.files.internal("kingpiggy.png"));
-        normalPiggyTexture = new Texture(Gdx.files.internal("normalpiggy.png"));
-        woodStructureTexture = new Texture(Gdx.files.internal("wood.png"));
-        iceStructureTexture = new Texture(Gdx.files.internal("glass.png"));
-        steelStructureTexture = new Texture(Gdx.files.internal("stone.png"));
+        Texture redBirdTexture = new Texture(Gdx.files.internal("redbird.png"));
+        Texture blackBirdTexture = new Texture(Gdx.files.internal("blackbird.png"));
+        Texture yellowBirdTexture = new Texture(Gdx.files.internal("yellowbird.png"));
+        Texture kingPiggyTexture = new Texture(Gdx.files.internal("kingpiggy.png"));
+        Texture normalPiggyTexture = new Texture(Gdx.files.internal("normalpiggy.png"));
+        Texture woodStructureTexture = new Texture(Gdx.files.internal("wood.png"));
+        Texture iceStructureTexture = new Texture(Gdx.files.internal("glass.png"));
+        Texture steelStructureTexture = new Texture(Gdx.files.internal("stone.png"));
         SlingshotTexture = new Texture(Gdx.files.internal("Slingshot.png"));
-
 
         // Setup camera and viewport
         camera = new OrthographicCamera();
@@ -100,16 +85,13 @@ public class GameScreen2 implements Screen, BirdLauncher {
         retryCircle  = new Circle(28, 135, radius);
         saveCircle   = new Circle(44, 135, radius);
         nextButtonTexture = new Texture("next_button.png");
-        nextButtonRect = new Rectangle(120, 20, 13, 5); // Adjust position and size
+        nextButtonRect = new Rectangle(220, 130, 26, 10); // Adjust position and size
 
-        // Initialize birds
-        birds = new ArrayList<>();
+        birds = new ArrayList<>();// Initialize birds
         assembleBirds();
-        // Initialize pigs
-        piggies = new ArrayList<>();
+        piggies = new ArrayList<>();// Initialize pigs
         assemblePigs();
-        // Initialize structures
-        assembleStructures();
+        assembleStructures();// Initialize structures
 
         birdsRemaining = birds.size();
         pigsRemaining = piggies.size();
@@ -119,6 +101,7 @@ public class GameScreen2 implements Screen, BirdLauncher {
                 bird.setPosition(50, 40);
                 Slingshot slingshot = new Slingshot(bird);
                 stage.addActor(slingshot);// Add the slingshot for each bird
+                birdsRemaining--;
                 break;
             }
         }
@@ -180,7 +163,6 @@ public class GameScreen2 implements Screen, BirdLauncher {
         world.step(1 / 60f, 6, 2);
         collisionHandler.processQueuedDestruction(world);
 
-
         game.getbatch().begin();
         // Draw background
         game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
@@ -189,10 +171,7 @@ public class GameScreen2 implements Screen, BirdLauncher {
         game.getbatch().draw(retryTexture, 18, 125, 16, 16);
         game.getbatch().draw(saveTexture, 34, 125f, 24.7f, 14.3f);
         game.getbatch().draw(SlingshotTexture, 40, 18f, 25, 25);
-
-        if (birdsRemaining == 0 || pigsRemaining == 0) {
-            game.getbatch().draw(nextButtonTexture, 120, 20, 13, 5);
-        }
+        game.getbatch().draw(nextButtonTexture, 220, 130, 26, 10);
 
         // Render birds
         for (Bird bird : birds) {
@@ -239,31 +218,38 @@ public class GameScreen2 implements Screen, BirdLauncher {
                     }
                 }
             }
-            // Win screen shortcut for testing
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                game.setScreen(new WinScreen(game));
-            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {  // Detect `N` key press
             launchNextBird();
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            game.setScreen(new WinScreen(game));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            // Check if the current bird has a special ability
+            if (currentBird != null && currentBird.isLaunched()) {
+                if (currentBird instanceof yellowbird) {
+                    ((yellowbird) currentBird).activateSpecialAbility();
+                } else if (currentBird instanceof blackbird) {
+                    ((blackbird) currentBird).activateSpecialAbility();
+                }
+            }
+        }
     }
     @Override
     public void launchNextBird() {
-
         if (birdsRemaining > 0) {
-            Bird nextBird = birds.get(birds.size() - birdsRemaining);
-            nextBird.setPosition(50, 40);
-            Slingshot slingshot = new Slingshot(nextBird);
+            currentBird= birds.get(birds.size() - birdsRemaining);
+            currentBird.setPosition(50, 40);
+            Slingshot slingshot = new Slingshot(currentBird);
             stage.addActor(slingshot);
             birdsRemaining--;
         }
-    }
 
+    }
     public static void pigDestroyed() {
         pigsRemaining--;
     }
-
 
     @Override
     public void dispose() {
@@ -285,6 +271,7 @@ public class GameScreen2 implements Screen, BirdLauncher {
             structure.dispose();
         }
     }
+
 
     @Override
     public void show() {

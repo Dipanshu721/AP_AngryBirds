@@ -2,8 +2,16 @@ dependencies {
   api "com.badlogicgames.gdx:gdx:1.12.1"
   implementation "com.badlogicgames.gdx:gdx-box2d:1.12.1"
   implementation "com.badlogicgames.gdx:gdx-box2d-platform:1.12.1:natives-desktop"
+  implementation 'com.badlogicgames.gdx:gdx-backend-lwjgl3:1.10.0'
+  runtimeOnly 'com.badlogicgames.gdx:gdx-platform:1.10.0:natives-desktop'
+
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0' // Adjust version as needed
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
 
   if (enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+
   }
 }

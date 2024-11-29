@@ -55,9 +55,8 @@ public abstract class Piggy extends GameObject {
     }
 
     public boolean isDestroyed() {
-        return health <= 0; // Adjust based on how destruction is tracked
+        return health <= 0;
     }
-
 
     @Override
     public void dispose() {

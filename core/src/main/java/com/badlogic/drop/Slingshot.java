@@ -1,5 +1,7 @@
 package com.badlogic.drop;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,12 +17,13 @@ public class Slingshot extends Actor {
         this.bird = bird;
         this.initialPosition = bird.getBody().getPosition().cpy();
 
-        setPosition(initialPosition.x-10, initialPosition.y-10);
-        setSize(20,20);
+        setPosition(initialPosition.x - 10, initialPosition.y - 10);
+        setSize(20, 20);
 
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                //special ability / deactivated
 //                if (bird.isLaunched()) {
 //                    if (bird instanceof blackbird) {
 //                        ((blackbird) bird).activateSpecialAbility();
@@ -29,13 +32,13 @@ public class Slingshot extends Actor {
 //                    }
 //                }
 //                else{
-                    // Standard drag logic
-                        Vector2 worldCoords = new Vector2(event.getStageX(), event.getStageY());
-                        if (worldCoords.dst(initialPosition) < 30) {
-                        isDragging = true;
-                        currentPosition.set(worldCoords);
-                        return true;
-                    }
+                // Standard drag logic..
+                Vector2 worldCoords = new Vector2(event.getStageX(), event.getStageY());
+                if (worldCoords.dst(initialPosition) < 35) {
+                    isDragging = true;
+                    currentPosition.set(worldCoords);
+                    return true;
+                }
                 return false;
             }
 
@@ -59,4 +62,20 @@ public class Slingshot extends Actor {
             }
         });
     }
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        // Check for SpaceBar press to activate special ability
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            if (bird.isLaunched()) {
+                if (bird instanceof yellowbird) {
+                    bird.activateSpecialAbility();
+                } else if (bird instanceof blackbird) {
+                    bird.activateSpecialAbility();
+                }
+            }
+        }
+    }
 }
+

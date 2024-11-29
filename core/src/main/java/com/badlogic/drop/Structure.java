@@ -47,14 +47,15 @@ public abstract class Structure extends GameObject {
 
     public void reduceHealth(int damage) {
         health -= damage;
+        reduceHealth(50);
+        System.out.println("Structure health: " + health);
         if (health <= 0) {
-//            destroyed = true;
+            System.out.println("Structure queued for destruction.");
             CollisionHandler.queueForDestruction(body);
-//            damageaboveBlock();
         }
     }
     public boolean isDestroyed() {
-        return health <= 0; // Adjust based on how destruction is tracked
+        return health <= 0;
     }
 
     public void render(SpriteBatch spriteBatch) {

@@ -23,39 +23,48 @@ public class CollisionHandler implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        Fixture fixtureA = contact.getFixtureA();
-        Fixture fixtureB = contact.getFixtureB();
+        Object userDataA = contact.getFixtureA().getBody().getUserData();
+        Object userDataB = contact.getFixtureB().getBody().getUserData();
 
-        if (fixtureA.getBody().getUserData() instanceof Bird) {
-            handleCollision(fixtureA, fixtureB);
-        } else if (fixtureB.getBody().getUserData() instanceof Bird) {
-            handleCollision(fixtureB, fixtureA);
+        // Handle Pig
+        if (userDataA instanceof Piggy) {
+            handlePigCollision((Piggy) userDataA, contact.getFixtureB());
+        } else if (userDataB instanceof Piggy) {
+            handlePigCollision((Piggy) userDataB, contact.getFixtureA());
+        }
+
+        // Handle Structure
+        if (userDataA instanceof Structure) {
+            handleStructureCollision((Structure) userDataA, contact.getFixtureB());
+        } else if (userDataB instanceof Structure) {
+            handleStructureCollision((Structure) userDataB, contact.getFixtureA());
         }
     }
 
-    private void handleCollision(Fixture birdFixture, Fixture otherFixture) {
-        if (birdFixture.getBody().getUserData() instanceof Bird) {
-            Bird bird = (Bird) birdFixture.getBody().getUserData();
-
-            if (otherFixture.getBody().getUserData() instanceof Piggy) {
-                Piggy piggy = (Piggy) otherFixture.getBody().getUserData();
-                piggy.reduceHealth(100);
-                if (piggy.isDestroyed()) {
-                    queueForDestruction(otherFixture.getBody());
-                    piggy.dispose();
-                    GameScreen2.pigDestroyed();
-                }
-            } else if (otherFixture.getBody().getUserData() instanceof Structure) {
-                Structure structure = (Structure) otherFixture.getBody().getUserData();
-                structure.reduceHealth(80);
-                if (structure.isDestroyed()) {
-                    queueForDestruction(otherFixture.getBody());
-                    structure.dispose();
-                }
+    private void handlePigCollision(Piggy piggy, Fixture otherFixture) {
+        if (otherFixture.getBody().getUserData() instanceof Bird) {
+            piggy.reduceHealth(100); // Adjust damage value as needed
+            if (piggy.isDestroyed()) {
+                CollisionHandler.queueForDestruction(otherFixture.getBody());
+                piggy.dispose();
+                GameScreen2.pigDestroyed();
             }
         }
     }
 
+    private void handleStructureCollision(Structure structure, Fixture otherFixture) {
+        // Check if collided with a bird or another structure
+        if (otherFixture.getBody().getUserData() instanceof Bird) {
+            structure.reduceHealth(80); // Adjust damage value as needed
+        } else if (otherFixture.getBody().getUserData() instanceof Structure) {
+            structure.reduceHealth(35);
+        }
+
+        if (structure.isDestroyed()) {
+            CollisionHandler.queueForDestruction(otherFixture.getBody());
+            structure.dispose();
+        }
+    }
 
     @Override
     public void endContact(Contact contact) {
