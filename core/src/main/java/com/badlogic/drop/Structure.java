@@ -16,13 +16,13 @@ public abstract class Structure extends GameObject {
         this.width = width; // Initialize width and height
         this.height = height;
         this.health = hardcoded;
-        body.setUserData(this);
 
         // Define the body
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
         this.body = world.createBody(bodyDef);
+        body.setUserData(this);
 
         // Define the shape and attach it to the body
         PolygonShape shape = new PolygonShape();
@@ -47,12 +47,7 @@ public abstract class Structure extends GameObject {
 
     public void reduceHealth(int damage) {
         health -= damage;
-        reduceHealth(50);
         System.out.println("Structure health: " + health);
-        if (health <= 0) {
-            System.out.println("Structure queued for destruction.");
-            CollisionHandler.queueForDestruction(body);
-        }
     }
     public boolean isDestroyed() {
         return health <= 0;
@@ -78,9 +73,6 @@ public abstract class Structure extends GameObject {
 
     @Override
     public void dispose() {
-        super.dispose(); // Dispose of texture
-        if (texture != null) {
-            texture.dispose();
-        }
+        super.dispose(); // Dispose of texture (parent handles texture.dispose())
     }
 }

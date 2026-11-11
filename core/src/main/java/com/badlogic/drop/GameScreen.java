@@ -150,7 +150,7 @@ public class GameScreen implements Screen,BirdLauncher {
         Body groundBody = world.createBody(groundDef);
 
         PolygonShape groundShape = new PolygonShape();
-        groundShape.setAsBox(128, 0); // Width = 2560, Height = 2 (half-dimensions)
+        groundShape.setAsBox(128, 1); // Half-width = 128, Half-height = 1
 
         FixtureDef groundFixture = new FixtureDef();
         groundFixture.shape = groundShape;
@@ -186,11 +186,15 @@ public class GameScreen implements Screen,BirdLauncher {
         }
         // Render pigs
         for (Piggy piggy : piggies) {
-            piggy.render(game.getbatch());
+            if (!piggy.isDestroyed()) {
+                piggy.render(game.getbatch());
+            }
         }
         // Render structures
         for (Structure structure : structures) {
-            structure.render(game.getbatch());
+            if (!structure.isDestroyed()) {
+                structure.render(game.getbatch());
+            }
         }
 
         game.getbatch().end();
@@ -252,12 +256,16 @@ public class GameScreen implements Screen,BirdLauncher {
         }
 
         for (Piggy piggy : piggies) {
-            piggy.dispose();
+            if (!piggy.isDestroyed()) piggy.dispose();
         }
 
         for (Structure structure : structures) {
-            structure.dispose();
+            if (!structure.isDestroyed()) structure.dispose();
         }
+
+        stage.dispose();
+        world.dispose();
+        debugRenderer.dispose();
     }
 
     @Override

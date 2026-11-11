@@ -6,17 +6,17 @@ import java.util.List;
 
 public class CollisionHandler implements ContactListener {
 
-    private static final List<Body> objectsToDestroy = new ArrayList<>();
-    public static void queueForDestruction(Body body) {
+    private final List<Body> objectsToDestroy = new ArrayList<>();
+
+    public void queueForDestruction(Body body) {
         if (!objectsToDestroy.contains(body)) {
             objectsToDestroy.add(body);
         }
     }
+
     public void processQueuedDestruction(World world) {
+        if (world.isLocked()) return;
         for (Body body : objectsToDestroy) {
-            if (world.isLocked()){
-                continue;
-            }
             body.setActive(false);
         }
         objectsToDestroy.clear();
@@ -43,42 +43,33 @@ public class CollisionHandler implements ContactListener {
     }
 
     private void handlePigCollision(Piggy piggy, Fixture otherFixture) {
-        if (otherFixture.getBody().getUserData() instanceof Bird) {
-            piggy.reduceHealth(100); // Adjust damage value as needed
-            if (piggy.isDestroyed()) {
-                CollisionHandler.queueForDestruction(otherFixture.getBody());
-                piggy.dispose();
-                GameScreen2.pigDestroyed();
-            }
+        if (piggy.isDestroyed()) return;
+        Object other = otherFixture.getBody().getUserData();
+        if (other instanceof Bird) {
+            piggy.reduceHealth(100);
+        } else if (other instanceof Structure) {
+            piggy.reduceHealth(40); // Pigs can be crushed by falling structures
         }
     }
 
     private void handleStructureCollision(Structure structure, Fixture otherFixture) {
-        // Check if collided with a bird or another structure
-        if (otherFixture.getBody().getUserData() instanceof Bird) {
-            structure.reduceHealth(80); // Adjust damage value as needed
-        } else if (otherFixture.getBody().getUserData() instanceof Structure) {
-            structure.reduceHealth(35);
+        if (structure.isDestroyed()) return;
+        Object other = otherFixture.getBody().getUserData();
+        if (other instanceof Bird) {
+            structure.reduceHealth(80);
         }
-
-        if (structure.isDestroyed()) {
-            CollisionHandler.queueForDestruction(otherFixture.getBody());
-            structure.dispose();
-        }
+        // Removed structure-on-structure damage to prevent towers self-destructing on spawn
     }
 
     @Override
     public void endContact(Contact contact) {
-
     }
 
     @Override
     public void preSolve(Contact contact, Manifold manifold) {
-
     }
 
     @Override
     public void postSolve(Contact contact, ContactImpulse contactImpulse) {
-
     }
 }

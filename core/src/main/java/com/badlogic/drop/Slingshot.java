@@ -56,7 +56,7 @@ public class Slingshot extends Actor {
                 if (isDragging) {
                     isDragging = false;
                     float velocity = (initialPosition.dst(currentPosition));
-                    float angle = initialPosition.sub(currentPosition).angleRad();
+                    float angle = new Vector2(initialPosition).sub(currentPosition).angleRad();
                     Slingshot.this.bird.launch(velocity, angle);
                 }
             }

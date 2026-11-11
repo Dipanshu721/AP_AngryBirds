@@ -14,6 +14,11 @@ public abstract class Piggy extends GameObject {
 
     public Piggy(String texturePath, float x, float y, World world) {
         super(texturePath, x, y, world);  // Passing the parameters to the parent constructor
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x, y);
+        this.body = world.createBody(bodyDef);
         body.setUserData(this);
 
         CircleShape shape = new CircleShape();
@@ -49,9 +54,6 @@ public abstract class Piggy extends GameObject {
 
     public void reduceHealth(int damage) {
         health -= damage;
-        if (health <= 0) {
-            CollisionHandler.queueForDestruction(body);
-        }
     }
 
     public boolean isDestroyed() {
@@ -60,9 +62,6 @@ public abstract class Piggy extends GameObject {
 
     @Override
     public void dispose() {
-        super.dispose();  // Call parent's dispose
-        if (texture != null) {
-            texture.dispose();
-        }
+        super.dispose();  // Call parent's dispose (handles texture)
     }
 }

@@ -14,9 +14,9 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        Box2D.init();
         batch = new SpriteBatch();
         setScreen(new HomeScreen(this));
-        Box2D.init();
     }
 
     @Override

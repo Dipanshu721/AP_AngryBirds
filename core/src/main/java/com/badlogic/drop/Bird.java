@@ -40,8 +40,8 @@ public abstract class Bird extends GameObject {
         launched = true; // Mark it launched
 
         // Apply impulse in the direction of the drag
-        float impulseX = (float) (Math.pow(10, 10)*velocity * Math.cos(angle));
-        float impulseY = (float) (Math.pow(10, 10)*velocity * Math.sin(angle));
+        float impulseX = velocity * (float) Math.cos(angle);
+        float impulseY = velocity * (float) Math.sin(angle);
 
         // Apply impulse directly to the body
         body.applyLinearImpulse(new Vector2((float) impulseX, (float) impulseY), body.getWorldCenter(), true);

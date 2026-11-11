@@ -23,6 +23,21 @@ public class blackbird extends Bird {
 
     @Override
     public void activateSpecialAbility() {
-
+        if (!abilityUsed && isLaunched()) {
+            // Explosion: apply force to nearby bodies
+            Vector2 birdPos = body.getPosition();
+            com.badlogic.gdx.utils.Array<Body> bodies = new com.badlogic.gdx.utils.Array<>();
+            world.getBodies(bodies);
+            for (Body b : bodies) {
+                if (b == body) continue;
+                Vector2 diff = b.getPosition().cpy().sub(birdPos);
+                float dist = diff.len();
+                if (dist < EXPLOSION_RADIUS && dist > 0) {
+                    Vector2 force = diff.nor().scl(EXPLOSION_FORCE / dist);
+                    b.applyLinearImpulse(force, b.getWorldCenter(), true);
+                }
+            }
+            abilityUsed = true;
+        }
     }
 }
