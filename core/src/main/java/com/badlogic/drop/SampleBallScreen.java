@@ -1,6 +1,5 @@
 package com.badlogic.drop;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,7 +10,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class SampleBallScreen implements Screen {
-    private final Main game;
     private World world; // Physics simulation world
     private Body ballBody;
     private Body groundBody;
@@ -20,7 +18,6 @@ public class SampleBallScreen implements Screen {
     private Viewport viewport;
 
     public SampleBallScreen(Main game) {
-        this.game = game;
         create();
     }
 
