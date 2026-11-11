@@ -3,10 +3,8 @@ package com.badlogic.drop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -18,8 +16,6 @@ public class WinScreen implements Screen {
     private Texture GoToHomeTexture;
     private Sprite GoToHomeSprite;
 
-    private SpriteBatch spriteBatch;
-    private OrthographicCamera camera;
     private Viewport viewport;
 
     public WinScreen(Main game) {
@@ -31,9 +27,7 @@ public class WinScreen implements Screen {
         backgroundTexture = new Texture(Gdx.files.internal("won.png"));
         GoToHomeTexture = new Texture(Gdx.files.internal("gotohome.png"));
 
-        spriteBatch = new SpriteBatch();
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(1946, 1094, camera);
+        viewport = new FitViewport(1946, 1094);
 
         GoToHomeSprite = new Sprite(GoToHomeTexture);
         GoToHomeSprite.setSize(570, 330);
@@ -50,19 +44,19 @@ public class WinScreen implements Screen {
         ScreenUtils.clear(Color.BLACK);
 
         viewport.apply();
-        spriteBatch.setProjectionMatrix(camera.combined);
+        game.getbatch().setProjectionMatrix(viewport.getCamera().combined);
 
-        spriteBatch.begin();
-        spriteBatch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-        GoToHomeSprite.draw(spriteBatch);
-        spriteBatch.end();
+        game.getbatch().begin();
+        game.getbatch().draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        GoToHomeSprite.draw(game.getbatch());
+        game.getbatch().end();
 
-        if (Gdx.input.isTouched()){
+        if (Gdx.input.justTouched()){
             Vector2 touchPos = new Vector2();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
-            if (touchPos.x >= 780 && touchPos.x <= 1292 && touchPos.y >= 650 && touchPos.y <= 794) {// enter level 1 game
+            if (touchPos.x >= 700 && touchPos.x <= 1270 && touchPos.y >= 500 && touchPos.y <= 830) {
                 game.setScreen(new HomeScreen(game));
             }
         }
@@ -82,7 +76,6 @@ public class WinScreen implements Screen {
 
     @Override
     public void dispose() {
-        spriteBatch.dispose();
         backgroundTexture.dispose();
         GoToHomeTexture.dispose();
     }

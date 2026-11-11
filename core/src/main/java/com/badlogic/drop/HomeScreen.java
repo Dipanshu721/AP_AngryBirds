@@ -47,10 +47,10 @@ public class HomeScreen implements Screen {
         touchPos.set(Gdx.input.getX(), Gdx.input.getY());
         viewport.unproject(touchPos);
 
-        if (Gdx.input.isTouched() &&
+        if (Gdx.input.justTouched() &&
             touchPos.x >= 850 && touchPos.x <= 1093.25f && touchPos.y >= 220 && touchPos.y <= 356.75f) {
             game.setScreen(new StartScreen(game));
-        } else if (Gdx.input.isTouched() &&
+        } else if (Gdx.input.justTouched() &&
             touchPos.x >= 850 && touchPos.x <= 1093.25f && touchPos.y >= 70 && touchPos.y <= 206.75f) {
             Gdx.app.exit();
         }

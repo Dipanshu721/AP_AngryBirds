@@ -76,7 +76,7 @@ public class LevelScreen implements Screen {
         play3Sprite.draw(game.getbatch());
         game.getbatch().end();
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             Vector2 touchPos = new Vector2();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);

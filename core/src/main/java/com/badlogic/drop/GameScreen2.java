@@ -59,13 +59,6 @@ public class GameScreen2 implements Screen, BirdLauncher {
         pauseTexture = new Texture(Gdx.files.internal("pausebutton.png"));
         retryTexture = new Texture(Gdx.files.internal("retry.png"));
         saveTexture = new Texture(Gdx.files.internal("save.png"));
-        Texture redBirdTexture = new Texture(Gdx.files.internal("redbird.png"));
-        Texture blackBirdTexture = new Texture(Gdx.files.internal("blackbird.png"));
-        Texture yellowBirdTexture = new Texture(Gdx.files.internal("yellowbird.png"));
-        Texture oldPiggyTexture = new Texture(Gdx.files.internal("oldpiggy.png"));
-        Texture woodStructureTexture = new Texture(Gdx.files.internal("wood.png"));
-        Texture iceStructureTexture = new Texture(Gdx.files.internal("glass.png"));
-        Texture steelStructureTexture = new Texture(Gdx.files.internal("stone.png"));
         SlingshotTexture = new Texture(Gdx.files.internal("Slingshot.png"));
 
         camera = new OrthographicCamera();

@@ -60,7 +60,7 @@ public class PausedScreen implements Screen {
 
     private void handleInput() {
         Vector2 touchPos = new Vector2();
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 
@@ -69,9 +69,9 @@ public class PausedScreen implements Screen {
                 game.setScreen(previousScreen); // Return to the calling screen
             }
 
-            // Exit button
+            // Exit button - go back to home
             if (touchPos.x >= 1050 && touchPos.x <= 1650 && touchPos.y >= 525 && touchPos.y <= 825) {
-                game.setScreen(new LostScreen(game)); // Navigate to the LostScreen
+                game.setScreen(new HomeScreen(game));
             }
         }
     }

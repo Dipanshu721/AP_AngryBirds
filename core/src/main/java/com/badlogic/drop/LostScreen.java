@@ -49,7 +49,7 @@ public class LostScreen implements Screen {
 
     private void handleInput() {
         Vector2 touchPos = new Vector2();
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
 

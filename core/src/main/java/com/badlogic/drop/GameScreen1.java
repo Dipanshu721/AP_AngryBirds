@@ -30,15 +30,6 @@ public class GameScreen1 implements Screen,BirdLauncher {
     private Texture pauseTexture;
     private Texture retryTexture;
     private Texture saveTexture;
-
-    private Texture redBirdTexture;
-    private Texture blackBirdTexture;
-    private Texture yellowBirdTexture;
-    private Texture kingPiggyTexture;
-    private Texture normalPiggyTexture;
-    private Texture woodStructureTexture;
-    private Texture iceStructureTexture;
-    private Texture steelStructureTexture;
     private Texture SlingshotTexture;
 
     // Birds
@@ -68,14 +59,6 @@ public class GameScreen1 implements Screen,BirdLauncher {
         pauseTexture = new Texture(Gdx.files.internal("pausebutton.png"));
         retryTexture = new Texture(Gdx.files.internal("retry.png"));
         saveTexture = new Texture(Gdx.files.internal("save.png"));
-        redBirdTexture = new Texture(Gdx.files.internal("redbird.png"));
-        blackBirdTexture = new Texture(Gdx.files.internal("blackbird.png"));
-        yellowBirdTexture = new Texture(Gdx.files.internal("yellowbird.png"));
-        kingPiggyTexture = new Texture(Gdx.files.internal("kingpiggy.png"));
-        normalPiggyTexture = new Texture(Gdx.files.internal("normalpiggy.png"));
-        woodStructureTexture = new Texture(Gdx.files.internal("wood.png"));
-        iceStructureTexture = new Texture(Gdx.files.internal("glass.png"));
-        steelStructureTexture = new Texture(Gdx.files.internal("stone.png"));
         SlingshotTexture = new Texture(Gdx.files.internal("Slingshot.png"));
 
 
@@ -203,7 +186,7 @@ public class GameScreen1 implements Screen,BirdLauncher {
         stage.draw();
 
         handleInput();
-        debugRenderer.render(world, camera.combined); // Render physics bodies
+//        debugRenderer.render(world, camera.combined); // Render physics bodies
 
         if (LevelComplete.checkWin(piggies)) {
             game.setScreen(new WinScreen(game));
