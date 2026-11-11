@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -28,10 +27,6 @@ public class GameScreen2 implements Screen, BirdLauncher {
 
     // Textures for UI and game objects
     private Texture backgroundTexture, pauseTexture, retryTexture, saveTexture;
-    private int birdsRemaining;
-    private static int pigsRemaining;
-    private Bird currentBird;
-
     private Texture SlingshotTexture;
 
     // Birds
@@ -82,15 +77,11 @@ public class GameScreen2 implements Screen, BirdLauncher {
         assemblePigs();
         assembleStructures();// Initialize structures
 
-        birdsRemaining = birds.size();
-        pigsRemaining = piggies.size();
-
         for (Bird bird : birds) {
             if (!bird.isLaunched()) {
                 bird.setPosition(50, 40);
                 Slingshot slingshot = new Slingshot(bird);
                 stage.addActor(slingshot);// Add the slingshot for each bird
-                birdsRemaining--;
                 break;
             }
         }
@@ -224,9 +215,6 @@ public class GameScreen2 implements Screen, BirdLauncher {
             stage.addActor(slingshot);
         }
 
-    }
-    public static void pigDestroyed() {
-        pigsRemaining--;
     }
 
     @Override

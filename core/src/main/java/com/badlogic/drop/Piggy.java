@@ -6,8 +6,6 @@ import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Piggy extends GameObject {
 
-    protected float x;  // X position of the object
-    protected float y;  // Y position of the object
     protected int height= 10;
     protected float width = 10;
     int health;

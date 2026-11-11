@@ -14,7 +14,6 @@ public class StartScreen implements Screen {
     Texture backgroundTexture;
     Texture newGame;
     Texture savedGame;
-    Texture Settings;       // to implement sound settings (ie, increase volume for bonus)
     FitViewport viewport;
     Vector2 touchPos;
 
